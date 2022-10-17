@@ -6,6 +6,10 @@ const session = require('express-session')
 const flash = require('express-flash')
 const passport = require("passport")
 
+const UsuarioDAO = require('./user/usuarioDAO')
+
+const userDAO = new UsuarioDAO()
+
 const initializePassport = require("./passportConfig")
 
 initializePassport(passport)
@@ -100,7 +104,11 @@ app.post('/users/register', async (req, res) => {
                     errors.push({ message: "Email alredy registered"})
                     res.render('register', { errors })
                 }else{
-                    pool.query(
+                    userDAO.inserir(name, adress, email, login, hashedPassword, res, req).then(() => {
+                        req.flash('success_msg', "You are now registered. Please login")
+                        res.redirect("/users/login")
+                    })
+                    /*pool.query(
                         `INSERT INTO usuario (nome, endereco, email, login, senha, administrador)
                         VALUES ($1, $2, $3, $4, $5, false)
                         RETURNING id, senha`, [name, adress, email, login, hashedPassword], (err, results) => {
@@ -111,7 +119,7 @@ app.post('/users/register', async (req, res) => {
                             req.flash('success_msg', "You are now registered. Please login")
                             res.redirect("/users/login")
                         }
-                    )
+                    )*/
                 }
             }
         )
