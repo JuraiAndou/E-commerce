@@ -27,7 +27,7 @@ function initialize (passport){
                         }
                     })
                 }else{
-                    return done(null, false, {message: "Email not registered"})
+                    return done(null, false, {message: "Login not registered"})
                 }
             }
         )
