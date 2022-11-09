@@ -1,5 +1,7 @@
+const express = require('express')
 const router = require('express').Router()
 const pool = require('../dbConfig')
+const bcrypt = require('bcrypt')
 
 //registering
 router.post('/register', async (req, res) => {
@@ -12,10 +14,10 @@ router.post('/register', async (req, res) => {
          * 5. Generating jwt token
          */
 
-        //1.
+        //  1.
         const { name, email, password } = req.body
 
-        //2
+        //  2.
         /**
          * @TODO Change this to a client DAO
          */
@@ -23,8 +25,22 @@ router.post('/register', async (req, res) => {
            email
         ])
 
-        res.json(user.rows)
+        if(user.rows.length !== 0){
+            return res.status(401).send('email alredy registered')
+        }
 
+        //  3.
+        const saltRound = 10
+        const salt = await bcrypt.genSalt(saltRound)
+
+        const bcryptPassword = await bcrypt.hash(password, salt)
+
+        //  4.
+        const newUser = await pool.query("INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *", [
+            name, email, bcryptPassword
+        ])
+
+        res.json(newUser.rows[0])
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Sever Error")
