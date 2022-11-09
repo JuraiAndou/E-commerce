@@ -19,9 +19,9 @@ router.post('/register', async (req, res) => {
         /**
          * @TODO Change this to a client DAO
          */
-        //const user = await pool.query('SELECT * FROM users WHERE user_email = $1', [//
-        //    email
-        //])
+        const user = await pool.query('SELECT * FROM users WHERE user_email = $1', [
+           email
+        ])
 
         res.json(user.rows)
 
