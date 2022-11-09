@@ -1,5 +1,5 @@
 const router = require('express').Router()
-//const pool = require('../dbConfig')
+const pool = require('../dbConfig')
 
 //registering
 router.post('/register', async (req, res) => {
