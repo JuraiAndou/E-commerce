@@ -3,9 +3,11 @@ const router = require('express').Router()
 const pool = require('../dbConfig')
 const bcrypt = require('bcrypt')
 const jwtGenerator = require('../utils/jwtGenerator')
+const validInfo = require('../middleware/validInfo')
+const authorization = require('../middleware/authorization')
 
 //registering
-router.post('/register', async (req, res) => {
+router.post('/register', validInfo, async (req, res) => {
     try {
         /**
          * 1. Destrucute the req.body (name, email, passwd)
@@ -51,7 +53,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', validInfo, async (req, res) => {
     try {
         /**
          * 1. Destrucute the req.body (email, pswd)
@@ -92,6 +94,15 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         console.error(err.message)
         res.status(500).send("Server Error")
+    }
+})
+
+router.get('/is-verify', authorization, async (req, res) => {
+    try {
+        
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
     }
 })
 
