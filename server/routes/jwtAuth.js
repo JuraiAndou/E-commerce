@@ -20,7 +20,7 @@ router.post('/register', async (req, res) => {
 
         //  2.
         /**
-         * @TODO Change this to a client DAO
+         * @TODO Change this to a user DAO
          */
         const user = await pool.query('SELECT * FROM users WHERE user_email = $1', [
             email
@@ -48,6 +48,50 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Sever Error")
+    }
+})
+
+router.post('/login', async (req, res) => {
+    try {
+        /**
+         * 1. Destrucute the req.body (email, pswd)
+         * 2. Check if the user doesn't exists (if the user doesn't exists then throw error)
+         * 3. Check if incomming pswd is the same as the database pswd
+         * 4. give them the jwt token
+         */
+
+        // 1.
+        const { email, password } = req.body
+
+        // 2.
+        /**
+         * @TODO Change this to a user DAO
+         */
+        const user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+            email
+        ])
+
+        if (user.rows.length === 0) {
+            return res.status(401).json("Password or Email is incorrect")
+        }
+
+        // 3.
+        const validPassword = await bcrypt.compare(
+            password,
+            user.rows[0].user_password
+        )
+
+        if (!validPassword) {
+            return res.status(401).json("Password or Email is incorrect")
+        }
+
+        // 4.
+        const token = jwtGenerator(user.rows[0].user_id)
+
+        res.json({ token })
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send("Server Error")
     }
 })
 
