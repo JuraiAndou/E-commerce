@@ -27,7 +27,7 @@ const Dashbord = (props) => {
 
     useEffect(() => {// Called everytime the component is reached
         getName()
-    })
+    },[])
 
     return (
         <Fragment>
