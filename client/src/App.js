@@ -53,10 +53,11 @@ function App() {
       <Router>
         <div className='container'>
           <Routes>
+            <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={!isAuthenticated ? (
               <Login setAuth={setAuth} />
             ) : (
-              <Navigate to='/dashbord' />
+              <Navigate to='/dashboard' />
             )} />
             <Route path='/register' element={!isAuthenticated ? (
               <Register setAuth={setAuth} />
