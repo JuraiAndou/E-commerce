@@ -25,7 +25,7 @@ const Dashbord = (props) => {
         props.setAuth(false)
     }
 
-    useEffect(() => {// Called everytime the component is reached
+    useEffect(() => {// Called everytime the component is rendered
         getName()
     },[])
 
