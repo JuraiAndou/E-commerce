@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 
 const Dashbord = (props) => {
 
@@ -23,11 +24,12 @@ const Dashbord = (props) => {
         e.preventDefault()// Prevents a refresh
         localStorage.removeItem('token')
         props.setAuth(false)
+        toast.success("Logged out successfully")
     }
 
     useEffect(() => {// Called everytime the component is rendered
         getName()
-    },[])
+    }, [])
 
     return (
         <Fragment>

@@ -1,5 +1,9 @@
 import { Fragment, useEffect, useState } from 'react';
 import './App.css';
+import React from 'react';
+import { ToastContainer} from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   BrowserRouter as Router,
@@ -16,10 +20,16 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const setAuth = boolean => {
+    /**
+     * So you can keep track of authentication
+     */
     setIsAuthenticated(boolean)
   }
 
   async function isAuth() {
+    /**
+     * Checks for authentication from the JWT
+     */
     try {
       const response = await fetch('http://localhost:5000/auth/is-verify', {
         method: 'GET',
@@ -28,14 +38,14 @@ function App() {
 
       const parseRes = await response.json()
 
-      parseRes == true ? setIsAuthenticated(true) : setIsAuthenticated(false)
+      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false)
     } catch (err) {
       console.error(err.message);
     }
   }
 
   useEffect(() => {
-    isAuth()
+    isAuth()// So you can check for authentication on refresh
   })
 
   return (
@@ -61,6 +71,7 @@ function App() {
           </Routes>
         </div>
       </Router>
+      <ToastContainer />
     </Fragment>
   );
 }

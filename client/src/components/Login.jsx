@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const Login = (props) => {
 
@@ -27,9 +28,15 @@ const Login = (props) => {
 
             const parseRes = await response.json()
 
-            localStorage.setItem('token', parseRes.token)
+            if (parseRes.token) {
+                localStorage.setItem('token', parseRes.token)
 
-            props.setAuth(true)
+                props.setAuth(true)
+                toast.success('Logged in successfuly!')
+            } else {
+                props.setAuth(false)
+                toast.error(parseRes)
+            }
         } catch (err) {
             console.error(err.message);
         }
