@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Register = (props) => {
 
@@ -8,9 +9,9 @@ const Register = (props) => {
         name: ''
     })// So you can store the value of the iputs
 
-    const { email, password, name } = inputs
+    const { email, password, name } = inputs// Destructure the inputs
 
-    const onChange = (e) => {
+    const onChange = (e) => {// Updates the stored values
         setInputs({ ...inputs, [e.target.name]: e.target.value })
     }
 
@@ -68,6 +69,7 @@ const Register = (props) => {
                     <button className="btn btn-primary btn-success">Submit</button>
                 </div>
             </form>
+            <Link to="/login">Login</Link>
         </Fragment>
     )
 }
