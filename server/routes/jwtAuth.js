@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwtGenerator = require('../utils/jwtGenerator')
 const validInfo = require('../middleware/validInfo')
 const authorization = require('../middleware/authorization')
+const priviledge = require('../middleware/isAdmin')
 
 //registering
 router.post('/register', validInfo, async (req, res) => {
@@ -98,6 +99,15 @@ router.post('/login', validInfo, async (req, res) => {
 })
 
 router.get('/is-verify', authorization, async (req, res) => {
+    try {
+        res.json(true)
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
+    }
+})
+
+router.get('/is-admin', authorization, priviledge, async (req, res) => {
     try {
         res.json(true)
     } catch (err) {

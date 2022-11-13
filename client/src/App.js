@@ -12,9 +12,10 @@ import {
   Navigate
 } from "react-router-dom";
 // Components
-import Dashbord from './components/Dashboard';
+import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Register from './components/Register';
+import DashbordAdmin from './components/DashboardAdmin';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -44,9 +45,41 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    isAuth()// So you can check for authentication on refresh
-  })
+  /**
+   * Administrator verification
+   */
+   const [isAdministrator, setIsAdmin] = useState(false)
+
+   const setAdmin = boolean => {
+     /**
+      * So you can keep track of authentication
+      */
+     setIsAdmin(boolean)
+   }
+ 
+   async function isAdmin() {
+     /**
+      * Checks for authentication from the JWT
+      */
+     try {
+       const response = await fetch('http://localhost:5000/auth/is-admin', {
+         method: 'GET',
+         headers: { token: localStorage.token }
+       })
+ 
+       const parseRes = await response.json()
+ 
+       parseRes === true ? setIsAdmin(true) : setIsAdmin(false)
+     } catch (err) {
+       console.error(err.message);
+     }
+   }
+ 
+   //Called evrery time is rendered
+   useEffect(() => {
+     isAuth()// So you can check for authentication on refresh
+     isAdmin()// So you can check for priviledge on refresh
+   })
 
   return (
     <Fragment>
@@ -64,8 +97,12 @@ function App() {
             ) : (
               <Navigate to='/login' />
             )} />
-            <Route path='/dashbord' element={isAuthenticated ? (
-              <Dashbord setAuth={setAuth} />
+            <Route path='/dashboard' element={isAuthenticated ? (
+              !isAdministrator ? (
+                <Dashboard setAuth={setAuth} />
+              ) : (
+                <DashbordAdmin setAuth={setAuth} />
+              )
             ) : (
               <Navigate to='/login' />
             )} />
