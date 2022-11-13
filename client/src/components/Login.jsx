@@ -14,14 +14,14 @@ const Login = (props) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value })
     }
 
-    const onSubmitForm = async(e) => {
+    const onSubmitForm = async (e) => {
         e.preventDefault()// Prevents from refreshing the page on submit
         try {
-            const body = {email, password}
+            const body = { email, password }
 
             const response = await fetch("http://localhost:5000/auth/login", {
                 method: 'Post',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             })
 
