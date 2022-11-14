@@ -2,6 +2,8 @@ import { Fragment, useEffect, useState } from 'react';
 import './App.css';
 import React from 'react';
 import { ToastContainer} from 'react-toastify';
+import NavBar from './components/Layout/NaveBar';
+
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,7 +11,8 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate
+  Navigate,
+  Link
 } from "react-router-dom";
 // Components
 import Dashboard from './components/Dashboard';
@@ -17,6 +20,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import DashbordAdmin from './components/DashboardAdmin';
 import EditProfile from './components/EditProfile';
+import Home from './components/Home';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -86,6 +90,7 @@ function App() {
     <Fragment>
       <Router>
         <div className='container'>
+          <NavBar/>
           <Routes>
             <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={!isAuthenticated ? (
@@ -105,13 +110,14 @@ function App() {
                 <DashbordAdmin setAuth={setAuth} />
               )
             ) : (
-              <Navigate to='/login' />
+              <Navigate to='/login' element={Home}/>
             )} />
             <Route path='/edit' element={isAuthenticated ? (
               <EditProfile setAuth={setAuth}/>
             ) : (
               <Navigate to='/login' />
             )}/>
+            <Route path='/home' element={<Home />}/>
           </Routes>
         </div>
       </Router>

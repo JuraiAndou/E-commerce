@@ -13,6 +13,9 @@ app.use("/auth", require("./routes/jwtAuth"));
 // Dashboard Route
 app.use('/dashboard', require('./routes/dashboard'))
 
+// Dashboard Route
+app.use('/home', require('./routes/home'))
+
 app.listen(port, () => {
   console.log(`Server is starting on port ${port}`);
 });
