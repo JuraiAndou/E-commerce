@@ -54,7 +54,7 @@ const ProductComponent = ({ id, nome, preco, isAdministrator }) => {
     const { prod_descricao, prod_preco } = inputs
 
     const onChange = (e) => {
-        setInputs({...inputs, [e.target.name]: e.target.value})
+        setInputs({ ...inputs, [e.target.name]: e.target.value })
     }
 
     return (
@@ -73,10 +73,21 @@ const ProductComponent = ({ id, nome, preco, isAdministrator }) => {
                             type="text"
                             name="prod_descricao"
                             placeholder="descricao"
-                            className="from control my-3"
+                            className="form-control my-3"
                             value={prod_descricao}
                             onChange={e => onChange(e)}
                         />
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="password"
+                            className="form-control my-3"
+                            value={prod_preco}
+                            onChange={e => onChange(e)}
+                        />
+                        <div className="d-grid gap-2 my-3">
+                            <button className="btn btn-primary btn-success">Submit</button>
+                        </div>
                     </form>
                 )}
                 {isAdministrator ? (
