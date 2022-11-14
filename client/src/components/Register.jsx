@@ -10,7 +10,7 @@ const Register = (props) => {
         name: ''
     })// So you can store the value of the iputs
 
-    const { email, password, name } = inputs// Destructure the inputs
+    const { email, password, name, adress } = inputs// Destructure the inputs
 
     const onChange = (e) => {// Updates the stored values
         setInputs({ ...inputs, [e.target.name]: e.target.value })
@@ -20,7 +20,7 @@ const Register = (props) => {
         e.preventDefault()// Prevents a refresh
         try {
 
-            const body = { email, password, name }
+            const body = { email, password, name, adress }
 
             const response = await fetch('http://localhost:5000/auth/register', {
                 method: 'POST',
@@ -69,6 +69,14 @@ const Register = (props) => {
                     placeholder="name"
                     className="form-control my-3"
                     value={name}
+                    onChange={e => onChange(e)}
+                />
+                <input
+                    type="text"
+                    name="adress"
+                    placeholder="adress"
+                    className="form-control my-3"
+                    value={adress}
                     onChange={e => onChange(e)}
                 />
                 <div className="d-grid gap-2">
