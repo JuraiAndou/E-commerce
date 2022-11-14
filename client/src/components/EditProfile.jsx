@@ -26,8 +26,8 @@ const EditProfile = (props) =>{
     }
 
     const [newData, setNewData] = useState({
-        user_name: " ",
-        user_email: " "
+        user_name: "",
+        user_email: ""
     });
 
     const onEdit = (e) =>{
