@@ -90,7 +90,7 @@ function App() {
     <Fragment>
       <Router>
         <div className='container'>
-          <NavBar/>
+          <NavBar isAuthenticated={isAuthenticated} isAdministrator={isAdministrator}/>
           <Routes>
             <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={!isAuthenticated ? (

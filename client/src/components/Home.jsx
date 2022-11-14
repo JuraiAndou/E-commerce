@@ -25,7 +25,7 @@ const Home = (props) => {
 
     return(
         <Fragment>
-            <h1>Produtos</h1>
+            <h1 className="text-center my-5">Produtos</h1>
             <div className="d-flex p-2 flex-wrap"> 
             {products.length > 0 &&
                 products.map((product) =>(
