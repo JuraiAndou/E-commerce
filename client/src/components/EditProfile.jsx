@@ -100,11 +100,11 @@ const EditProfile = (props) =>{
                 <input type="password" name="user_password" placeholder="Password" value={newData.user_password} onChange={e => onEdit(e)} />
                 
                 <div className="d-grid gap-2">
-                    <button className="btn btn-primary btn-success">Submit</button>
+                    <button className="btn btn-success">Submit</button>
                 </div>
             </form>
             
-            <button onClick={deleteUser} className="btn">Delete Account</button><br/>
+            <button onClick={deleteUser} className="btn btn-danger">Delete Account</button><br/>
             <Link to="/dashboard" className="btn">Back</Link>
             
         </Fragment>
