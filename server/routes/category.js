@@ -27,9 +27,9 @@ router.get('/get-categories', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
-        const categoy = await pool.query('SELECT * FROM categoria')
+        const category = await pool.query('SELECT * FROM categoria')
 
-        res.json(categoy.rows)
+        res.json(category.rows)
     } catch (err) {
         console.error(err.message);
         res.status(500).json('Server Error')

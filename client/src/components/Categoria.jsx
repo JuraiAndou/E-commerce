@@ -12,6 +12,7 @@ const Categoria= (props) => {
             })
 
             const parseRes = await response.json()
+            console.log(parseRes[0].descricao);
             setCategoria(parseRes)
             
         } catch (err) {
@@ -28,8 +29,8 @@ const Categoria= (props) => {
             <h1 className="text-center my-5">Categorias</h1>
             <div className="d-flex p-2 flex-wrap"> 
             {categoria.length > 0 &&
-                categoria.map((categoria) =>(
-                    <CategoryComponent id={categoria.id} nome={categoria.descricao}/>
+                categoria.map((catego) =>(
+                    <CategoryComponent id={catego.id} descricao={catego.descricao} key={catego.id}/>
                 ))
             }
             </div>
