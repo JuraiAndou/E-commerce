@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 
-const ProductComponent = ({ id, nome, preco, isAdministrator }) => {
+const ProductComponent = ({ id, nome, preco: price, isAdministrator }) => {
 
     /**
      * Editing State
@@ -39,22 +40,42 @@ const ProductComponent = ({ id, nome, preco, isAdministrator }) => {
         }
     }
 
-    const onSubmitForm = async (e) => {
-        e.preventDefault()
-    }
-
     /**
      * Form input management
      */
     const [inputs, setInputs] = useState({
         prod_descricao: nome,
-        prod_preco: preco
+        prod_preco: price
     })// So you can store the value of the input
 
     const { prod_descricao, prod_preco } = inputs
 
     const onChange = (e) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value })
+    }
+
+    /**
+     * Edit form submit function
+     */
+    const onSubmitForm = async (e) => {
+        e.preventDefault()
+        try {
+            const descricao = prod_descricao
+            const preco = prod_preco
+            const body = { descricao, preco }
+            console.log(body)
+            const response = await fetch("http://localhost:5000/product/update-product?prod=" + id, {
+                method: 'Post',
+                headers: { 'Content-Type': 'application/json', token: localStorage.token },
+                body: JSON.stringify(body)
+            })
+
+            const parseRes = await response.json()
+            window.location.reload(false)
+        } catch (err) {
+            console.error(err.message);
+            toast.error('🚫 Product Info Update Fail')
+        }
     }
 
     return (
@@ -65,22 +86,22 @@ const ProductComponent = ({ id, nome, preco, isAdministrator }) => {
                 {!isEditing ? (
                     <Fragment>
                         <h5 className="card-title">{nome}</h5>
-                        <p className="card-text">{preco}</p>
+                        <p className="card-text">{price}</p>
                     </Fragment>
                 ) : (
-                    <form>
+                    <form onSubmit={onSubmitForm}>
                         <input
                             type="text"
                             name="prod_descricao"
-                            placeholder="descricao"
+                            placeholder="descrição"
                             className="form-control my-3"
                             value={prod_descricao}
                             onChange={e => onChange(e)}
                         />
                         <input
-                            type="password"
-                            name="password"
-                            placeholder="password"
+                            type="number"
+                            name="prod_preco"
+                            placeholder="preço"
                             className="form-control my-3"
                             value={prod_preco}
                             onChange={e => onChange(e)}
