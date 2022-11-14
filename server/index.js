@@ -13,6 +13,13 @@ app.use("/auth", require("./routes/jwtAuth"));
 // Dashboard Route
 app.use('/dashboard', require('./routes/dashboard'))
 
+
+// Product Route
+app.use('/product', require('./routes/products'))
+// Category Route
+app.use('/category', require('./routes/category'))
+
+
 // Dashboard Route
 app.use('/home', require('./routes/home'))
 

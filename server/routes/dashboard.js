@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
+const bcrypt = require('bcrypt')
+
 
 router.get('/', authorization, async (req, res) => {
     try {
@@ -25,8 +27,8 @@ router.get('/data', authorization, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
-        const user = await pool.query('SELECT user_name, user_email FROM users WHERE user_id = $1', [req.user.id])
-
+        const user = await pool.query('SELECT user_name, user_email, user_adress FROM users WHERE user_id = $1', [req.user.id])
+        console.log(user.rows[0]);
         res.json(user.rows[0])
     } catch (err) {
         console.error(err.message);
@@ -42,13 +44,35 @@ router.post('/update', authorization, async (req, res) => {
          * @TODO Change this to a user DAO
          */
         
-        const {user_name, user_email} = await req.body;
+        const {user_name, user_email, user_address, user_password} = await req.body;
         //console.log(newName);
-        
-        const user = await pool.query('UPDATE users SET user_name = $1, user_email = $2 WHERE user_id = $3 RETURNING user_name, user_email', 
-        [user_name, user_email, req.user.id])
+        // Criptografar a senha
+        const saltRound = 10
+        const salt = await bcrypt.genSalt(saltRound)
+
+        const bcryptPassword = await bcrypt.hash(user_password, salt)
+
+        const user = await pool.query('UPDATE users SET user_name = $1, user_email = $2, user_adress = $3 user_password = $4 WHERE user_id = $5 RETURNING user_name, user_email', 
+        [user_name, user_email, user_address, bcryptPassword, req.user.id])
 
         res.json(user.rows[0])
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
+router.post('/deleteUser', authorization, async (req, res) => {
+    try {
+        console.log("bingus");
+        /**
+         * @TODO Change this to a user DAO
+         */
+        
+        const result = await pool.query('DELETE FROM users WHERE user_id=$1', 
+        [req.user.id]);
+
+        res.json("User deleted ", result)
     } catch (err) {
         console.error(err.message);
         res.status(500).json('Server Error')

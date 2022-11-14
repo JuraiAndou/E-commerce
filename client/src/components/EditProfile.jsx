@@ -6,7 +6,9 @@ const EditProfile = (props) =>{
 
     const [data, setData] = useState({
         user_name: "",
-        user_email: ""
+        user_email: "",
+        user_adress: "",
+        user_password: ""
     });
 
     // Retrive data from user
@@ -27,7 +29,9 @@ const EditProfile = (props) =>{
 
     const [newData, setNewData] = useState({
         user_name: "",
-        user_email: ""
+        user_email: "",
+        user_adress: "",
+        user_password: ""
     });
 
     const onEdit = (e) =>{
@@ -61,6 +65,22 @@ const EditProfile = (props) =>{
         e.preventDefault()
         setDataBD();
     }
+    
+    const deleteUser = async(e) => {
+        //e.preventDefault()// Prevents a refresh
+        try{
+            await fetch("http://localhost:5000/dashboard/deleteUser", {
+                method: "POST",
+                headers: { token: localStorage.token, 
+                    'Content-Type': 'application/json'
+                  }
+            })
+            localStorage.removeItem('token')
+            window.location.reload(false);
+        } catch(err){
+            console.error(err.message);
+        }
+    }
 
     useEffect(() => {// Called everytime the component is rendered
         getData()
@@ -71,16 +91,22 @@ const EditProfile = (props) =>{
             <h1>Edit Profile</h1>
             <p>{data.user_name}</p>
             <p>{data.user_email}</p>
+            <p>{data.user_adress}</p>
             
             <form onSubmit={onSubmitEdit}>
                 <input type="text" name="user_name" placeholder="Name" value={newData.user_name} onChange={e => onEdit(e)} />
                 <input type="email" name="user_email" placeholder="Email" value={newData.user_email} onChange={e => onEdit(e)} />
+                <input type="text" name="user_adress" placeholder="Address" value={newData.user_adress} onChange={e => onEdit(e)} />
+                <input type="password" name="user_password" placeholder="Password" value={newData.user_password} onChange={e => onEdit(e)} />
+                
                 <div className="d-grid gap-2">
                     <button className="btn btn-primary btn-success">Submit</button>
                 </div>
             </form>
             
+            <button onClick={deleteUser} className="btn">Delete Account</button><br/>
             <Link to="/dashboard" className="btn">Back</Link>
+            
         </Fragment>
     )
 }
