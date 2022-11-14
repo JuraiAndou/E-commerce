@@ -21,6 +21,7 @@ import Register from './components/Register';
 import DashbordAdmin from './components/DashboardAdmin';
 import EditProfile from './components/EditProfile';
 import Home from './components/Home';
+import Categoria from './components/Categoria'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -118,6 +119,7 @@ function App() {
               <Navigate to='/login' />
             )}/>
             <Route path='/home' element={<Home isAdministrator={isAdministrator}/>}/>
+            <Route path='/category' element= {<Categoria />}/>
           </Routes>
         </div>
       </Router>
