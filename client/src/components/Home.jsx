@@ -29,7 +29,7 @@ const Home = (props) => {
             <div className="d-flex p-2 flex-wrap"> 
             {products.length > 0 &&
                 products.map((product) =>(
-                    <ProductComponent id={product.id} nome={product.descricao} preco={product.preco} key={product.id}/>
+                    <ProductComponent id={product.id} nome={product.descricao} preco={product.preco} key={product.id} isAdministrator={props.isAdministrator}/>
                 ))
             }
             </div>

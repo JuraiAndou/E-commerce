@@ -117,7 +117,7 @@ function App() {
             ) : (
               <Navigate to='/login' />
             )}/>
-            <Route path='/home' element={<Home />}/>
+            <Route path='/home' element={<Home isAdministrator={isAdministrator}/>}/>
           </Routes>
         </div>
       </Router>
