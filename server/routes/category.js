@@ -36,5 +36,43 @@ router.get('/get-categories', authorization, priviledge, async (req, res) => {
     }
 })
 
+router.post('/update-category', authorization, priviledge, async (req, res) => {
+    try {
+        
+        const { descricao } = req.body
+
+        const { cat } = req.query
+        /**
+         * @TODO Change this to a user DAO
+         */
+        const newCategory = await pool.query('UPDATE categoria SET descricao = $1 WHERE id = $2 RETURNING *', [
+            descricao,
+            cat
+        ])
+
+        res.json(newCategory.rows[0])
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
+router.post('/remove-category', authorization, priviledge, async (req, res) => {
+    try {
+        const { cat } = req.query
+
+        /**
+         * @TODO Change this to a user DAO
+         */
+        const oldCategory = await pool.query('DELETE FROM public.categoria WHERE id = $1;', [
+            cat
+        ])
+
+        res.json(oldCategory.rowCount)
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
 
 module.exports = router
