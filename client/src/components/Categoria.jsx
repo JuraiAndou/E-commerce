@@ -37,4 +37,4 @@ const Categoria= (props) => {
     )
 }
 
-export default Home
+export default Categoria
