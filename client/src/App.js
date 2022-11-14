@@ -16,6 +16,7 @@ import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Register from './components/Register';
 import DashbordAdmin from './components/DashboardAdmin';
+import EditProfile from './components/EditProfile';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -106,6 +107,11 @@ function App() {
             ) : (
               <Navigate to='/login' />
             )} />
+            <Route path='/edit' element={isAuthenticated ? (
+              <EditProfile setAuth={setAuth}/>
+            ) : (
+              <Navigate to='/login' />
+            )}/>
           </Routes>
         </div>
       </Router>

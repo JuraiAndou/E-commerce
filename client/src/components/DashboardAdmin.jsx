@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 const DashbordAdmin = (props) => {
@@ -35,6 +36,7 @@ const DashbordAdmin = (props) => {
         <Fragment>
             <h1>Dashboard Admin</h1>
             <p>Hello <strong>{name.split(' ')[0]}</strong></p>
+            <Link to="/edit" className="btn">Edit Profile</Link>
             <button
                 className="btn btn-primary"
                 onClick={e => logout(e)}
