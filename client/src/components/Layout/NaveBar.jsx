@@ -17,6 +17,18 @@ function NavBar(props){
             ):( 
                 <Link style={linkStyle} to='/login'> LOGIN/REGISTER </Link>             
             )}
+           
+            {
+            props.isAuthenticated ? (props.isAdministrator ? (
+                 <Link style={linkStyle} to='/category'> CATEGORIA </Link>  
+                ):(
+                    <span></span>
+                )):(
+                    <span></span>
+                )
+            }
+        
+            
         </nav>
         
     </Fragment>
