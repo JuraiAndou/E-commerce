@@ -45,18 +45,37 @@ router.post('/update-product', authorization, priviledge, async (req, res) => {
         
         const { descricao, preco, quantidade } = req.body
 
-        const { id } = req.params.id_prod
+        const { prod } = req.query
 
         /**
          * @TODO Change this to a user DAO
          */
-        const newProduct = await pool.query('INSERT INTO public.produto(descricao, preco, quantidade)VALUES ($1, $2, $3) RETURNING *', [
+        const newProduct = await pool.query('UPDATE produto SET descricao = $1, preco = $2, quantidade = $3 WHERE id = $4 RETURNING *', [
             descricao,
             preco,
-            quantidade
+            quantidade,
+            prod
         ])
 
-        res.json(newProduct.rows)
+        res.json(newProduct.rows[0])
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
+router.post('/remove-product', authorization, priviledge, async (req, res) => {
+    try {
+        const { prod } = req.query
+
+        /**
+         * @TODO Change this to a user DAO
+         */
+        const newProduct = await pool.query('DELETE FROM public.produto WHERE id = $1;', [
+            prod
+        ])
+
+        res.json(newProduct.rowCount)
     } catch (err) {
         console.error(err.message);
         res.status(500).json('Server Error')
