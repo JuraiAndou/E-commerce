@@ -56,6 +56,7 @@ const DashbordAdmin = (props) => {
                 body: JSON.stringify(body)
             })
         const parseRes = await response.json()
+        toast.success('Product ' + productData.descricao + ' added')
             
         console.log(parseRes);
         }catch(err){
@@ -74,19 +75,23 @@ const DashbordAdmin = (props) => {
     const onSubmitCategory = async(e) =>{
         e.preventDefault();
         try {//console.log(productData);
-        const body = categoryData;
-        console.log(body);
-
-        const response = await fetch('http://localhost:5000/category/add-category', {
-                method: 'POST',
+          const body = categoryData;
+          console.log(body);
+          if (categoryData.descricao !== '') {
+            const response = await fetch('http://localhost:5000/category/add-category', {
+              method: 'POST',
                 headers: { token: localStorage.token, 
-                           'Content-Type': 'application/json' 
-                         },
+                  'Content-Type': 'application/json' 
+                },
                 body: JSON.stringify(body)
-            })
-        const parseRes = await response.json()
+              })
+            const parseRes = await response.json()
+            toast.success('Category ' + categoryData.descricao + ' added')
             
-        console.log(parseRes);
+            console.log(parseRes);
+          } else{
+            toast.error('Product description empty')
+          }
         }catch(err){
             console.error(err.message);
         }
