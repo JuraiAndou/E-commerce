@@ -18,7 +18,8 @@ app.use('/dashboard', require('./routes/dashboard'))
 app.use('/product', require('./routes/products'))
 // Category Route
 app.use('/category', require('./routes/category'))
-
+// Sales Route
+app.use('/sales', require('./routes/sales'))
 
 // Dashboard Route
 app.use('/home', require('./routes/home'))
