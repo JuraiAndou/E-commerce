@@ -8,7 +8,8 @@ class Usuario{
         this._login = _login;
         this._senha = _senha;
         this._administrador = _administrador;
-        
+        this._vendas = [];
+        this._quant_vendas = this.vendas.length;
         
     }
     get id(){
@@ -58,6 +59,19 @@ class Usuario{
     }
     set administrador(new_adm){
         this._administrador = new_adm;
+    }
+    
+    set vendas(new_vendas){
+        this._vendas.push(new_vendas)
+    }
+
+    get vendas(){
+        return this._vendas
+    }
+
+    get quant_vendas(){
+        this._quant_vendas = this._vendas.length;
+        return this._quant_vendas
     }
 }
 
