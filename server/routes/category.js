@@ -2,6 +2,8 @@ const router = require('express').Router()
 const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
+const cDAO = require('../modelo/categoriaDAO');
+
 
 router.post('/add-category', authorization, priviledge, async (req, res) => {
     try {
@@ -10,9 +12,12 @@ router.post('/add-category', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
+        /*
         const newCategory = await pool.query('INSERT INTO public.categoria(descricao)VALUES ($1) RETURNING *', [
             descricao,
         ])
+        //*/
+        const newCategory = await cDAO.inserir(descricao);
 
         res.json(newCategory.rows)
 
@@ -27,9 +32,16 @@ router.get('/get-categories', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
-        const category = await pool.query('SELECT * FROM categoria')
+        //const category = await pool.query('SELECT * FROM categoria')
+        
+        //res.json(category.rows)
+        const category = await cDAO.obterTodos()
+        
+        //console.log("bingus: ");
+        //console.log(category);
 
-        res.json(category.rows)
+        res.json(category)
+
     } catch (err) {
         console.error(err.message);
         res.status(500).json('Server Error')
@@ -45,10 +57,14 @@ router.post('/update-category', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
+        /*
         const newCategory = await pool.query('UPDATE categoria SET descricao = $1 WHERE id = $2 RETURNING *', [
             descricao,
             cat
         ])
+        */
+
+        const newCategory = await cDAO.atualizar(descricao, cat);
 
         res.json(newCategory.rows[0])
     } catch (err) {
@@ -64,9 +80,13 @@ router.post('/remove-category', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
+        /*
         const oldCategory = await pool.query('DELETE FROM public.categoria WHERE id = $1;', [
             cat
         ])
+        //*/
+
+        const oldCategory = await cDAO.deletar(cat);
 
         res.json(oldCategory.rowCount)
     } catch (err) {
