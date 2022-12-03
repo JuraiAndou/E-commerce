@@ -27,7 +27,16 @@ function NavBar(props){
                     <span></span>
                 )
             }
-        
+
+            {
+            props.isAuthenticated ? (!props.isAdministrator ? (
+                <Link style={linkStyle} to='/sales'> COMPRAS </Link>
+            ):(
+                <span></span>
+            )):(
+                <span></span>
+            ) 
+            }
             
         </nav>
         

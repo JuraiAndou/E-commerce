@@ -22,6 +22,7 @@ import DashbordAdmin from './components/DashboardAdmin';
 import EditProfile from './components/EditProfile';
 import Home from './components/Home';
 import Categoria from './components/Categoria'
+import UserSales from './components/UserSales';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -129,6 +130,14 @@ function App() {
               <Navigate to='/login' />
               
             )}/>
+
+            <Route path='/sales' element={ isAuthenticated ? (
+              <UserSales/>
+            ) : (
+              <Navigate to ='/login'/>
+            )}/>
+
+
           </Routes>
         </div>
       </Router>
