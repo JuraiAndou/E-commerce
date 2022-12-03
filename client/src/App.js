@@ -119,7 +119,16 @@ function App() {
               <Navigate to='/login' />
             )}/>
             <Route path='/home' element={<Home isAdministrator={isAdministrator}/>}/>
-            <Route path='/category' element= {<Categoria />}/>
+            <Route path='/category' element= { isAuthenticated ? (
+              isAdministrator? (
+                <Categoria/>  
+              ) : (
+                <Navigate to='/login' />
+              )
+            ) : (
+              <Navigate to='/login' />
+              
+            )}/>
           </Routes>
         </div>
       </Router>
