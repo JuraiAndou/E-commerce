@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.0
--- Dumped by pg_dump version 15.0
+-- Dumped from database version 15.1
+-- Dumped by pg_dump version 15.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -248,8 +248,8 @@ ALTER SEQUENCE public."VENDA_PRODUTO_id_venda_seq" OWNED BY public.venda_produto
 
 CREATE TABLE public.venda (
     id integer NOT NULL,
-    data_hora character varying NOT NULL,
-    id_usuario integer NOT NULL
+    data date NOT NULL,
+    id_user integer NOT NULL
 );
 
 
@@ -275,28 +275,6 @@ ALTER TABLE public.venda_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.venda_id_seq OWNED BY public.venda.id;
-
-
---
--- Name: venda_id_usuario_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.venda_id_usuario_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.venda_id_usuario_seq OWNER TO postgres;
-
---
--- Name: venda_id_usuario_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.venda_id_usuario_seq OWNED BY public.venda.id_usuario;
 
 
 --
@@ -339,13 +317,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public."
 --
 
 ALTER TABLE ONLY public.venda ALTER COLUMN id SET DEFAULT nextval('public.venda_id_seq'::regclass);
-
-
---
--- Name: venda id_usuario; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.venda ALTER COLUMN id_usuario SET DEFAULT nextval('public.venda_id_usuario_seq'::regclass);
 
 
 --
@@ -407,7 +378,7 @@ ALTER TABLE ONLY public.venda_produto
 --
 
 ALTER TABLE ONLY public.venda
-    ADD CONSTRAINT venda_pkey PRIMARY KEY (id_usuario);
+    ADD CONSTRAINT venda_pkey PRIMARY KEY (id);
 
 
 --
@@ -432,14 +403,6 @@ ALTER TABLE ONLY public.venda_produto
 
 ALTER TABLE ONLY public.produto_categoria
     ADD CONSTRAINT id_produto FOREIGN KEY (id_produto) REFERENCES public.produto(id);
-
-
---
--- Name: venda id_usuario; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.venda
-    ADD CONSTRAINT id_usuario FOREIGN KEY (id_usuario) REFERENCES public.users(user_id);
 
 
 --
