@@ -19,6 +19,35 @@ const Home = (props) => {
         }
     }
 
+    
+    //const [category, setCategory] = useState({id: "", descricao: ""});
+    /*
+    async function getCat(id_produto){
+        try {
+            console.log("bingus: ");
+            console.log(id_produto);
+            const body = {id_produto}
+
+            const response = await fetch("http://localhost:5000/category/get-category", 
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', token: localStorage.token},
+                body: JSON.stringify(body)
+            }
+            )
+            console.log("abuble");
+            console.log("");
+            const parseRes = await response.json();
+            console.log("BINGUS");
+            console.log(parseRes.descricao);
+            //setCategory(parseRes.descricao);
+            return parseRes
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    */
     useEffect(()=>{
         getProdutcs()
     },[])

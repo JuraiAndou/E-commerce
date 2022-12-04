@@ -3,12 +3,10 @@ const db = require("../dbConfig");
 const { log } = require("console");
 
 class VendaDAO{
-    async inserir(data_hora, id_usuario) {
+    async inserir(data, id_usuario) {
         //let u = new usuario.Usuario();
-        let queryString = `INSERT INTO venda(data_hora, id_usuario) VALUES ($1, $2)`;
-        let values = [data_hora, id_usuario];
-
-        
+        let queryString = `INSERT INTO venda(data, id_usuario) VALUES ($1, $2) RETURNING * `;
+        let values = [data, id_usuario];
         try {
             const res = await db.query(queryString, values)
             console.log(res)
@@ -21,7 +19,7 @@ class VendaDAO{
 
     async deletar(id){
 
-        let queryString = `DELETE FROM venda WHERE id = $1`;
+        let queryString = `DELETE FROM venda WHERE id = $1 RETURNING *`;
         try {
             const res = await db.query(queryString, [id])
             console.log(res.rows)
@@ -54,9 +52,9 @@ class VendaDAO{
         }   
     }
 
-    async atualizar(data_hora, id_usuario){
-        let queryString = `UPDATE venda SET data_hora = $2, id_usuario = $3 WHERE id = $1`;
-        let values = [data_hora, id_usuario];
+    async atualizar(data, id_usuario){
+        let queryString = `UPDATE venda SET data = $2, id_usuario = $3 WHERE id = $1 RETURNING *`;
+        let values = [data, id_usuario];
         let results;
         
         try {
