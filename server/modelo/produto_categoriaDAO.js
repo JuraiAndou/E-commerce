@@ -1,5 +1,5 @@
 
-const db = require("./dbConfig");
+const db = require("../dbConfig");
 const { log } = require("console");
 
 class Produto_CategoriaDAO{
@@ -14,7 +14,7 @@ class Produto_CategoriaDAO{
         } catch (err) {
             console.log(err.stack)
         }
-        console.log("Dados inseridos");
+        //console.log("Dados inseridos");
     }
 
     async deletar(id1, id2){
@@ -53,6 +53,42 @@ class Produto_CategoriaDAO{
             results = await db.query(queryString, [id1, id2]);
 
             console.log("Dados obtidos: ", results.rows);
+            return results.rows;
+
+        } catch (err) {
+            console.error(err.message);
+        }
+        
+    }
+
+    async obterCategoriasDoProduto(id_produto){
+        let queryString = `SELECT cat.id, cat.descricao FROM public.produto_categoria AS pc, public.categoria AS cat WHERE pc.id_categoria = cat.id AND pc.id_produto = $1`;
+        let results;   
+        
+        try {
+           
+            results = await db.query(queryString, [id_produto]);
+
+            //console.log("DAO Dados obtidos: ", results.rows);
+            return results.rows;
+
+        } catch (err) {
+            console.error(err.message);
+        }
+        
+    }
+
+    async obterProdutosDaCategoria(id_categoria){
+        let queryString = `SELECT p.id, p.descricao, p.preco, p.quantidade 
+                           FROM public.produto_categoria AS pc, public.categoria AS cat, public.produto AS p 
+                           WHERE pc.id_categoria = cat.id AND pc.id_produto = p.id AND pc.id_categoria = $1`;
+        let results;   
+        
+        try {
+           
+            results = await db.query(queryString, [id_categoria]);
+
+            //console.log("DAO Dados obtidos: ", results.rows);
             return results.rows;
 
         } catch (err) {

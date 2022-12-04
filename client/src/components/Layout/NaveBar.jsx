@@ -37,6 +37,14 @@ function NavBar(props){
                 <span></span>
             ) 
             }
+
+            {
+            props.isAuthenticated ? (
+                <Link style={linkStyle} to='/categoryProduct'>CATEGORIAS DE PRODUTOS</Link>
+            ) : (
+                <span></span>
+            )
+            }
             
         </nav>
         

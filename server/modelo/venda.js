@@ -1,8 +1,8 @@
 class Venda{
-    constructor(id, data_hora, id_usuario)
+    constructor(id, data, id_usuario)
     {
         this._id = id;
-        this._data_hora = data_hora;
+        this._data = data;
         this._id_usuario = id_usuario
         
     }
@@ -14,11 +14,11 @@ class Venda{
         this._id = new_id;
     }
 
-    get data_hora(){
-        return this._data_hora;
+    get data(){
+        return this._data;
     }
-    set data_hora(new_data_hora){
-        this._data_hora = new_data_hora;
+    set data(new_data){
+        this._data = new_data;
     }
 
     get id_usuario(){

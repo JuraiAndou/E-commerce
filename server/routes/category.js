@@ -3,7 +3,7 @@ const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
 const cDAO = require('../modelo/categoriaDAO');
-
+const pcDAO = require('../modelo/produto_categoriaDAO');
 
 router.post('/add-category', authorization, priviledge, async (req, res) => {
     try {
@@ -47,6 +47,63 @@ router.get('/get-categories', authorization, priviledge, async (req, res) => {
         res.status(500).json('Server Error')
     }
 })
+
+router.post('/get-category', authorization, async (req, res) => {
+    try {
+        /**
+         * @TODO Change this to a user DAO
+         */
+        //const category = await pool.query('SELECT * FROM categoria')
+        
+        //res.json(category.rows)
+        const {id_produto} = req.body;
+
+        const categories = await pcDAO.obterCategoriasDoProduto(id_produto)
+        console.log(categories[0]);
+        //const category = await cDAO.obter(categories[0].id);
+        
+        //console.log("bingus: ");
+        //console.log(category);
+
+        res.json(categories[0])
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
+router.post('/get-category-products', authorization, async (req, res) => {
+    try {
+        const {id_categoria} = req.body;
+
+        const products = await pcDAO.obterCategoriasDoProduto(id_categoria)
+        //console.log(categories[0]);
+        
+        res.json(products)
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
+router.post('/get-products-category', authorization, async (req, res) => {
+    try {
+        //console.log("abublé");
+        const {id_categoria} = req.query;
+        //console.log(req.query);
+        const products = await pcDAO.obterProdutosDaCategoria(id_categoria)
+        //console.log(categories[0]);
+        
+        res.json(products)
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
 
 router.post('/update-category', authorization, priviledge, async (req, res) => {
     try {

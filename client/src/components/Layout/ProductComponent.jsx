@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 
-const ProductComponent = ({ id, nome, preco: price, isAdministrator }) => {
+const ProductComponent = ({ id, nome, preco: price, isAdministrator}) => {
 
     /**
      * Editing State
@@ -77,6 +77,12 @@ const ProductComponent = ({ id, nome, preco: price, isAdministrator }) => {
             toast.error('🚫 Product Info Update Fail')
         }
     }
+    
+    /*
+    useEffect(()=>{
+        getCategory(id)
+    }, []);
+    //*/
 
     return (
 
@@ -87,6 +93,9 @@ const ProductComponent = ({ id, nome, preco: price, isAdministrator }) => {
                     <Fragment>
                         <h5 className="card-title">{nome}</h5>
                         <p className="card-text">{price}</p>
+                        
+                        
+                        
                     </Fragment>
                 ) : (
                     <form onSubmit={onSubmitForm}>

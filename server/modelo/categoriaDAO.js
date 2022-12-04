@@ -58,21 +58,22 @@ class CategoriaDAO{
             console.error(err.message);
         }
         
-        
-        
 
     }
 
     async obter(id){
         let queryString = `SELECT * FROM categoria WHERE id = $1`;
         let results;
-                
-        await db.connect();
-        results = await db.query(queryString, [id]);
-        await db.end();
+        
+        try {
+            results = await db.query(queryString, [id]);
 
-        console.log("Dados obtidos: ", results.rows);
-        return results.rows;
+            //console.log("Dados obtidos: ", results.rows);
+            return results.rows;
+
+        } catch (err) {
+            console.error(err.message);
+        }
         
     }
 
