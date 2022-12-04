@@ -52,16 +52,17 @@ router.get('/get-products', authorization, priviledge, async (req, res) => {
 router.post('/update-product', authorization, priviledge, async (req, res) => {
     try {
         
-        const { descricao, preco } = req.body
+        const { descricao, preco, quantidade } = req.body
 
         const { prod } = req.query
 
         /**
          * @TODO Change this to a user DAO
          */
-        const newProduct = await pool.query('UPDATE produto SET descricao = $1, preco = $2 WHERE id = $3', [
+        const newProduct = await pool.query('UPDATE produto SET descricao = $1, preco = $2, quantidade = $3 WHERE id = $4', [
             descricao,
             preco,
+            quantidade,
             prod
         ])
 
