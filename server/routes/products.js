@@ -50,10 +50,29 @@ router.get('/get-products', authorization, priviledge, async (req, res) => {
     }
 })
 
+router.get('/get-productsWithCategory', authorization, async(req, res) =>{
+    try {
+        //res.json(req.user)
+
+        /**
+         * @TODO Change this to a user DAO
+         */
+        //console.log("ENTROU NA URL");
+        const product = await pcDAO.obterProdutosComCategoria()
+        
+        
+
+        res.json(product)
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json('Server Error')
+    }
+})
+
 router.post('/update-product', authorization, priviledge, async (req, res) => {
     try {
         
-        const { descricao, preco, quantidade } = req.body
+        const { descricao, preco, quantidade, categoria_id } = req.body
 
         const { prod } = req.query
 
@@ -66,6 +85,11 @@ router.post('/update-product', authorization, priviledge, async (req, res) => {
             quantidade,
             prod
         ])
+
+        const newCat = await pool.query('UPDATE produto_categoria SET id_categoria = $1  WHERE id_produto = $2',[
+            categoria_id,
+            prod
+        ]);
 
         res.json(newProduct.rowCount)
     } catch (err) {

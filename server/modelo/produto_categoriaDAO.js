@@ -122,6 +122,26 @@ class Produto_CategoriaDAO{
         
     }
 
+    async obterProdutosComCategoria(){
+        let queryString = `SELECT p.id, p.descricao, p.preco, p.foto, p.quantidade, c.id AS id_categoria, c.descricao AS categoria_descricao
+                           FROM produto AS p, produto_categoria AS pc, categoria AS c
+                           WHERE p.id = pc.id_produto AND pc.id_categoria = c.id`
+        let results;   
+        
+        try {
+           
+            results = await db.query(queryString);
+
+            //console.log("DAO Dados obtidos: ", results.rows);
+            return results.rows;
+
+        } catch (err) {
+            console.error(err.message);
+        }
+        
+    }
+    
+
 }
 
 module.exports = new Produto_CategoriaDAO();

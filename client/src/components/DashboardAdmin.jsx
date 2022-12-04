@@ -230,6 +230,7 @@ const DashbordAdmin = (props) => {
                 Preço: <br /><input type="text" name="preco" placeholder="Preço" value={productData.preco} onChange={e => { onChangeProduct(e) }} /><br />
                 Quantidade: <br /><input type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} /><br />
                 Categoria: <br /><select id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
+                    <option value="---">Selecione a categoria</option>
                     {
                         categoria.length > 0 &&
                         categoria.map((catego) => (

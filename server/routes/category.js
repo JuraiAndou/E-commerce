@@ -74,13 +74,14 @@ router.post('/get-category', authorization, async (req, res) => {
 })
 
 router.post('/get-category-products', authorization, async (req, res) => {
+    // Pega a categoria de um produto a partir do seu id
     try {
-        const {id_categoria} = req.body;
+        const {id_produto} = req.query;
 
-        const products = await pcDAO.obterCategoriasDoProduto(id_categoria)
+        const category = await pcDAO.obterCategoriasDoProduto(id_produto)
         //console.log(categories[0]);
         
-        res.json(products)
+        res.json(category)
 
     } catch (err) {
         console.error(err.message);
