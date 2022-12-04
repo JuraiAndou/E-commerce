@@ -3,6 +3,7 @@ const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
 const pcDAO = require('../modelo/produto_categoriaDAO')
+const pDAO= require('../modelo/produtoDAO')
 
 router.post('/add-product', authorization, priviledge, async (req, res) => {
     try {
@@ -93,5 +94,15 @@ router.post('/remove-product', authorization, priviledge, async (req, res) => {
     }
 })
 
+router.get('/obter-products-out', authorization, priviledge, async (req, res) => {
+
+    try {
+        result = await pDAO.obterOutEstoque()
+        res.json(result)
+    } catch (err) {
+        console.error(err.message);
+    }
+      
+})
 
 module.exports = router

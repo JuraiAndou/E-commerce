@@ -137,6 +137,7 @@ function App() {
             ) : (
               <Navigate to ='/login'/>
             )}/>
+            
 
             <Route path='/categoryProduct' element={ isAuthenticated? (
               <CategoryProduct/>

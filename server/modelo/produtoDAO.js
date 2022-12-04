@@ -1,6 +1,5 @@
 
-const db = require("./dbConfig");
-const { log } = require("console");
+const db = require("../dbConfig");
 
 class ProdutoDAO{
     async inserir(descricao, preco, foto, quantidade) {
@@ -22,7 +21,7 @@ class ProdutoDAO{
 
     async deletar(id){
 
-        let queryString = `DELETE FROM produto WHERE id = $1`;
+        let queryString = `DELETE FROM produto WHERE id = $1`;lt
         try {
             await db.connect();
             const res = await db.query(queryString, [id])
@@ -37,12 +36,11 @@ class ProdutoDAO{
 
     async obterTodos(){
         let queryString = `SELECT * FROM produto`;
-        
-        await db.connect();
+   
         let results = await db.query(queryString);
-        await db.end();
+     
         
-        console.log("Dados obtidos:", results.rows);
+        //console.log("Dados obtidos:", results.rows);
         return results.rows;
     }
 
@@ -70,9 +68,19 @@ class ProdutoDAO{
         console.log("Dados atualizados");
     }
 
+    async obterOutEstoque(){
+        const produtos = await this.obterTodos()
+        let produtoOut = []
+        for (let i = 0; i < produtos.length; i++){
+            if (produtos[i].quantidade == 0){
+                var result = [produtos[i].id, produtos[i].descricao, produtos[i].preco]
+                produtoOut.push(result)
+            }
+        }
+        
+        return produtoOut
+    }
 }
 
-//pdao = new ProdutoDAO();
 
-//pdao.inserir("Carta de Dragão", 10.00, {message: "Imagem massa"}, 10)
-//pdao.obterTodos();
+module.exports = new ProdutoDAO;
