@@ -175,7 +175,9 @@ const DashbordAdmin = (props) => {
             })
 
       
+            console.log(result);
             const parseRes = await result.json()
+            console.log("oi");
 
             console.log(parseRes);
             setRelatorioP(parseRes);;

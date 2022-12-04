@@ -1,6 +1,5 @@
 
 const db = require("../dbConfig");
-const { log } = require("console");
 
 class ProdutoDAO{
     async inserir(descricao, preco, foto, quantidade) {
@@ -22,7 +21,7 @@ class ProdutoDAO{
 
     async deletar(id){
 
-        let queryString = `DELETE FROM produto WHERE id = $1`;
+        let queryString = `DELETE FROM produto WHERE id = $1`;lt
         try {
             await db.connect();
             const res = await db.query(queryString, [id])
@@ -41,7 +40,7 @@ class ProdutoDAO{
         let results = await db.query(queryString);
      
         
-        console.log("Dados obtidos:", results.rows);
+        //console.log("Dados obtidos:", results.rows);
         return results.rows;
     }
 
@@ -70,15 +69,16 @@ class ProdutoDAO{
     }
 
     async obterOutEstoque(){
-        const produtos = this.obterTodos()
+        const produtos = await this.obterTodos()
         let produtoOut = []
         for (let i = 0; i < produtos.length; i++){
             if (produtos[i].quantidade == 0){
                 var result = [produtos[i].id, produtos[i].descricao, produtos[i].preco]
                 produtoOut.push(result)
             }
-        return produtoOut
         }
+        
+        return produtoOut
     }
 }
 

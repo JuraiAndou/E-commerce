@@ -94,7 +94,7 @@ router.post('/remove-product', authorization, priviledge, async (req, res) => {
 })
 
 router.get('/obter-products-out', authorization, priviledge, async (req, res) => {
-   console.log("entrei");
+
     try {
         result = await pDAO.obterOutEstoque()
         res.json(result)
