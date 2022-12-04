@@ -35,11 +35,5 @@ app.listen(port, () => {
 // test.vendas = 2
 // console.log(test)
 
-const cDAO = require('./modelo/usuarioDAO')
 
-test = async () => {
-  result = await cDAO.obterTodos()
-  console.log(result[1].user_name)
-}
 
-test()

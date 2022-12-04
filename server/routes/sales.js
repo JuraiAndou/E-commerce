@@ -2,6 +2,7 @@ const router = require('express').Router()
 const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
+const cDAO = require('../modelo/usuarioDAO')
 
 
 router.get('/get-sales', authorization, priviledge, async(req, res) => {
@@ -12,7 +13,6 @@ router.get('/get-sales', authorization, priviledge, async(req, res) => {
     
     try {
         //const{user_id} = req.
-
         const sales = await pool.query(queryString);
         console.log(sales.rows);
 
@@ -43,5 +43,18 @@ router.get('/get-specific-sales', authorization, async(req, res) => {
     }
 
 });
+
+router.get('/get-allUser-sales',authorization, async(req, res) =>{
+
+    try {
+        result = await cDAO.obterComprasPerUser()
+        console.log(result)
+    } catch (err) {
+        console.error(err.message);
+    }
+
+
+});
+
 
 module.exports = router

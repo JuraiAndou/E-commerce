@@ -57,6 +57,7 @@ class Usuario{
     get administrador(){
         return this._administrador;
     }
+    
     set administrador(new_adm){
         this._administrador = new_adm;
     }

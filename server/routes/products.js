@@ -70,10 +70,13 @@ router.post('/remove-product', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
-        const newProduct = await pool.query('DELETE FROM public.produto WHERE id = $1;', [
+        const remove_child = await pool.query('DELETE FROM public.venda_produto WHERE id_produto = $1; ', [
             prod
         ])
-        res.json(newProduct.rowCount)
+        const remove_parent = await pool.query('DELETE FROM public.produto WHERE id = $1; ', [
+            prod
+        ])
+        res.json(remove_parent.rowCount)
     } catch (err) {
         console.error(err.message);
         res.status(500).json('Server Error')

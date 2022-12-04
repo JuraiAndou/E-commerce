@@ -4,6 +4,7 @@ class Venda{
         this._id = id;
         this._data_hora = data_hora;
         this._id_usuario = id_usuario
+        this
         
     }
 

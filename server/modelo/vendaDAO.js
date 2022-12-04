@@ -1,5 +1,5 @@
 
-const db = require("./dbConfig");
+const db = require("../dbConfig");
 const { log } = require("console");
 
 class VendaDAO{
@@ -10,10 +10,9 @@ class VendaDAO{
 
         
         try {
-            await db.connect();
             const res = await db.query(queryString, values)
             console.log(res)
-            await db.end();
+
         } catch (err) {
             console.log(err.stack)
         }
@@ -24,10 +23,8 @@ class VendaDAO{
 
         let queryString = `DELETE FROM venda WHERE id = $1`;
         try {
-            await db.connect();
             const res = await db.query(queryString, [id])
             console.log(res.rows)
-            await db.end();
         } catch (err) {
             console.log(err.stack)
         }
@@ -37,43 +34,52 @@ class VendaDAO{
 
     async obterTodos(){
         let queryString = `SELECT * FROM venda`;
-        
-        await db.connect();
-        let results = await db.query(queryString);
-        await db.end();
-        
-        console.log("Dados obtidos:", results.rows);
-        return results.rows;
+        try {
+            let results = await db.query(queryString);
+            return results.rows;
+        } catch (err) {
+            console.log(err.stack)
+        }
+    
     }
-
     async obter(id){
         let queryString = `SELECT * FROM venda WHERE id = $1`;
         let results;
                 
-        await db.connect();
-        results = await db.query(queryString, [id]);
-        await db.end();
-
-        console.log("Dados obtidos: ", results.rows);
-        return results.rows;
-        
+        try {
+            results = await db.query(queryString, [id]);
+            return results.rows;
+        } catch (err) {
+            console.log(err.stack)
+        }   
     }
 
     async atualizar(data_hora, id_usuario){
         let queryString = `UPDATE venda SET data_hora = $2, id_usuario = $3 WHERE id = $1`;
         let values = [data_hora, id_usuario];
         let results;
-
-        await db.connect();
-        await db.query(queryString, values);
-        await db.end();
-        console.log("Dados atualizados");
+        
+        try {
+            await db.query(queryString, values);
+            console.log("Dados atualizados")
+        } catch (err) {
+            console.log(err.stack)
+        }
+      ;
     }
+    
+    async getVendasPerUser(id_user){
+        let queryString = `Select venda.id, users.user_name, produto.id, produto.descricao, venda_produto.quantidade,venda.data from users  inner join (venda inner join (venda_produto inner join produto on produto.id = venda_produto.id_produto) on venda_produto.id_venda = venda.id) on venda.id_user = users.user_id where users.user_id = $1;`
+        let values = [id_user]
+        let results
 
+        try {
+            results = await db.query(queryString, values);
+            return results.rows;
+        } catch (err) {
+            console.log(err.stack)
+        }
+    }
 }
 
-//vdao = new VendaDAO();
-
-//vdao.inserir("2022 - 10 - 17T3:41:30.20", 1);
-//vdao.inserir(new Date(2022, 10, 17, 3, 49, 20, 20), 1);
-//vdao.obter(1);
+module.exports = new VendaDAO;

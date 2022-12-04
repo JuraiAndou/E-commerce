@@ -3,7 +3,7 @@
 const usuario = require("./usuario");
 const db = require("../dbConfig");
 const { log } = require("console");
-
+const vendas = require("./vendaDAO")
 
 class UsuarioDAO{
 
@@ -108,11 +108,18 @@ class UsuarioDAO{
         return false;
     }
 
-    async obterCompras(){
-        let queryString = `SELECT * FROM usuario WHERE id = $1`;
-
+    async obterComprasPerUser(){
+        let users = await this.obterTodos()
+        let vendasPerUser = []
+        
+        for (let i = 0; i < users.length; i++){
+            var result = [users[i].user_id, users[i].user_name, (await vendas.getVendasPerUser(users[i].user_id)).length]
+            vendasPerUser.push(result)
+        } 
+        return vendasPerUser
     }
 }
+
 
 module.exports = new UsuarioDAO;
 //udao = new UsuarioDAO();
