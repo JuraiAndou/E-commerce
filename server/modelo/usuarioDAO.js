@@ -1,7 +1,7 @@
 //import Usuario from "./usuario";
 
 const usuario = require("./usuario");
-const db = require("./dbConfig");
+const db = require("../dbConfig");
 const { log } = require("console");
 
 
@@ -57,18 +57,16 @@ class UsuarioDAO{
     }
 
     async obterTodos(){
-        let queryString = `SELECT * FROM usuario`;
+        let queryString = `SELECT * FROM users`;
         
-        await db.connect();
         let results = await db.query(queryString);
-        await db.end();
         
-        console.log("Dados obtidos:", results.rows);
+        //console.log("Dados obtidos:", results.rows);
         return results.rows;
     }
 
     async obter(id){
-        let queryString = `SELECT * FROM usuario WHERE id = $1`;
+        let queryString = `SELECT * FROM user WHERE user_id = $1`;
         let results;
                 
         await db.connect();
@@ -109,9 +107,14 @@ class UsuarioDAO{
         }
         return false;
     }
+
+    async obterCompras(){
+        let queryString = `SELECT * FROM usuario WHERE id = $1`;
+
+    }
 }
 
-module.exports = UsuarioDAO;
+module.exports = new UsuarioDAO;
 //udao = new UsuarioDAO();
 
 //udao.inserir("bangus", "rua bingus", "bangus@bingus.bin", "bangusLog", "bangusPass")

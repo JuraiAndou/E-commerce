@@ -27,3 +27,19 @@ app.use('/home', require('./routes/home'))
 app.listen(port, () => {
   console.log(`Server is starting on port ${port}`);
 });
+
+// const usuario = require("./modelo/usuario")
+
+// test = new usuario.Usuario()
+// test.vendas = 1
+// test.vendas = 2
+// console.log(test)
+
+const cDAO = require('./modelo/usuarioDAO')
+
+test = async () => {
+  result = await cDAO.obterTodos()
+  console.log(result[1].user_name)
+}
+
+test()
