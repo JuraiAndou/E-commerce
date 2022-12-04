@@ -142,7 +142,7 @@ router.post('/remove-category', authorization, priviledge, async (req, res) => {
             cat
         ])
         //*/
-
+        await pcDAO.deletarPelaCategoria(cat);
         const oldCategory = await cDAO.deletar(cat);
 
         res.json(oldCategory.rowCount)

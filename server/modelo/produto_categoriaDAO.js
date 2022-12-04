@@ -29,6 +29,31 @@ class Produto_CategoriaDAO{
         console.log("Dados deletados");
     }
 
+    async deletarPeloProduto(id1){
+
+        let queryString = `DELETE FROM produto_categoria WHERE id_produto = $1 RETURNING *`;
+        try {
+            const res = await db.query(queryString, [id1])
+        } catch (err) {
+            console.log(err.stack)
+        }
+        
+        console.log("Dados deletados");
+    }
+
+    async deletarPelaCategoria(id2){
+
+        let queryString = `DELETE FROM produto_categoria WHERE id_categoria = $1 RETURNING *`;
+        try {
+            const res = await db.query(queryString, [id2])
+        } catch (err) {
+            console.log(err.stack)
+        }
+        
+        console.log("Dados deletados");
+    }
+
+
     async obterTodos(){
         let queryString = `SELECT * FROM produto_categoria`;
         
