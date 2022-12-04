@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 
-const ProductComponent = ({ id, nome, preco: price, isAdministrator}) => {
+const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}) => {
 
     /**
      * Editing State
@@ -45,10 +45,11 @@ const ProductComponent = ({ id, nome, preco: price, isAdministrator}) => {
      */
     const [inputs, setInputs] = useState({
         prod_descricao: nome,
-        prod_preco: price
+        prod_preco: price,
+        prod_quantidade: quantidade
     })// So you can store the value of the input
 
-    const { prod_descricao, prod_preco } = inputs
+    const { prod_descricao, prod_preco, prod_quantidade } = inputs
 
     const onChange = (e) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value })
@@ -62,7 +63,8 @@ const ProductComponent = ({ id, nome, preco: price, isAdministrator}) => {
         try {
             const descricao = prod_descricao
             const preco = prod_preco
-            const body = { descricao, preco }
+            const quantidade = prod_quantidade
+            const body = { descricao, preco, quantidade }
             console.log(body)
             const response = await fetch("http://localhost:5000/product/update-product?prod=" + id, {
                 method: 'Post',
@@ -92,8 +94,8 @@ const ProductComponent = ({ id, nome, preco: price, isAdministrator}) => {
                 {!isEditing ? (
                     <Fragment>
                         <h5 className="card-title">{nome}</h5>
-                        <p className="card-text">{price}</p>
-                        
+                        <p className="card-text"> R$ {price}</p>
+                        <p className="card-text">{quantidade} itens em estoque</p>
                         
                         
                     </Fragment>
@@ -115,6 +117,16 @@ const ProductComponent = ({ id, nome, preco: price, isAdministrator}) => {
                             value={prod_preco}
                             onChange={e => onChange(e)}
                         />
+                        <input
+                            type="number"
+                            name="prod_quantidade"
+                            placeholder="quantidade"
+                            className="form-control my-3"
+                            value={prod_quantidade}
+                            onChange={e => onChange(e)}
+                        />
+                        
+
                         <div className="d-grid gap-2 my-3">
                             <button className="btn btn-primary btn-success">Submit</button>
                         </div>
