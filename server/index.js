@@ -29,7 +29,12 @@ app.listen(port, () => {
   console.log(`Server is starting on port ${port}`);
 });
 
-// const usuario = require("./modelo/usuario")
+const vDAO = require("./modelo/vendaDAO")
+
+test = async () => {
+  console.log(await vDAO.filterPricePerDate())
+}
+test()
 
 // test = new usuario.Usuario()
 // test.vendas = 1

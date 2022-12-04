@@ -4,7 +4,6 @@ const { log } = require("console");
 
 class VendaDAO{
     async inserir(data, id_usuario) {
-        //let u = new usuario.Usuario();
         let queryString = `INSERT INTO venda(data, id_usuario) VALUES ($1, $2) RETURNING * `;
         let values = [data, id_usuario];
         try {
@@ -74,9 +73,73 @@ class VendaDAO{
         try {
             results = await db.query(queryString, values);
             return results.rows;
+            
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
+    }
+
+    //------------------Funções para captação de compras por data 
+    async getPriceSales(){
+        let queryString = `SELECT data, venda.preco_final FROM venda`
+        let results
+
+        try {
+            results = await db.query(queryString);
+            return results.rows;
+            
+        } catch (err) {
+            console.error(err.stack)
+        }
+
+    }
+
+    async getDateSales(){
+        let queryString = `select DISTINCT venda.data FROM venda`
+        let results
+
+        try {
+            results = await db.query(queryString);
+            return results.rows;
+            
+        } catch (err) {
+            console.error(err.stack)
+        }
+
+    }
+
+    async getFullPricePerDate(){
+        let diasDeVenda = await this.getDateSales()
+        let pricesSales = await this.getPriceSales()
+        let vendasPerDay = []
+        let precoTotal = 0
+
+       
+        for (let i = 0; i < diasDeVenda.length; i++){
+            for (let j = 0; j < pricesSales.length; j++){
+                if (JSON.stringify(pricesSales[j].data) == JSON.stringify(diasDeVenda[i].data)){
+                    precoTotal += pricesSales[j].preco_final
+                }
+            }
+            vendasPerDay.push([diasDeVenda[i].data, precoTotal])
+            precoTotal = 0
+        } 
+        return vendasPerDay  
+    }
+
+    //estabelece um periodo da mostragem de ganho totais por dia
+    async filterPricePerDate(date){
+        let vendasPerDay = await this.getFullPricePerDate()
+
+        for (let i = 0; i < vendasPerDay.length; i++){
+            if (vendasPerDay[i][0] < new Date('2022-09-11T03:00:00.000Z')){
+                vendasPerDay.splice(i, 1)
+            }
+
+        }
+        vendasPerDay.sort((a, b) => a[0] - b[0]);
+
+        return vendasPerDay 
     }
 }
 

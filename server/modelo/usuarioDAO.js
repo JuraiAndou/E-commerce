@@ -10,7 +10,7 @@ class UsuarioDAO{
     /* Obter todos os usuários */
 
     async inserir(nome, endereco, email, login, senha) {
-        //let u = new usuario.Usuario();
+
         let queryString = `INSERT INTO usuario(nome, endereco, email, login, senha, administrador) VALUES ($1, $2, $3, $4, $5, $6)`;
         let values = [nome, endereco, email, login, senha, false];
 
@@ -18,8 +18,7 @@ class UsuarioDAO{
         try {
             await db.connect();
             const res = await db.query(queryString, values)
-            //console.log(res)
-            // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+
             await db.end();
             console.log("deu bom");
         } catch (err) {
@@ -27,27 +26,18 @@ class UsuarioDAO{
             console.log(err.stack)
         }
         
-        //*/
-        /*
-        await db.connect();
-        await db.query(queryString, values);
-        await db.end();
-        //*/
+
         console.log("Dados inseridos");
     }
 
     async deletar(id){
 
         let queryString = `DELETE FROM usuario WHERE id = $1`;
-        /*
-        await db.connect();
-        await db.query(queryString, [id]);
-        await db.end();
-        //*/
+   
         try {
             await db.connect();
             const res = await db.query(queryString, [id])
-            //console.log(res.rows)
+
             await db.end();
         } catch (err) {
             console.log(err.stack)
@@ -60,8 +50,7 @@ class UsuarioDAO{
         let queryString = `SELECT * FROM users`;
         
         let results = await db.query(queryString);
-        
-        //console.log("Dados obtidos:", results.rows);
+
         return results.rows;
     }
 
@@ -72,10 +61,6 @@ class UsuarioDAO{
         await db.connect();
         results = await db.query(queryString, [id]);
         await db.end();
-
-        //console.log("Dados obtidos: ", results.rows);
-        //let u = new usuario.Usuario(id, results.rows[0].nome, results.rows[0].endereco, results.rows[0].email, results.rows[0].login, results.rows[0].senha, results.rows[0].administrador);
-        //return u;
         return results.rows;
         
     }
@@ -99,8 +84,6 @@ class UsuarioDAO{
         results = await db.query(queryString, [id]);
         await db.end();
 
-        //console.log(senha);
-        //console.log(results.rows[0].senha);
 
         if(results.rows[0].senha === senha){
             return true;
@@ -111,10 +94,22 @@ class UsuarioDAO{
     async obterComprasPerUser(){
         let users = await this.obterTodos()
         let vendasPerUser = []
+        let comprasPerCliente = 0
         
         for (let i = 0; i < users.length; i++){
-            var result = [users[i].user_id, users[i].user_name, (await vendas.getVendasPerUser(users[i].user_id)).length]
+            const compra = await vendas.getVendasPerUser(users[i].user_id)
+            
+            for (let j = 0; j < compra.length; j++){
+                
+                if (compra[j].data >= new Date('2022-11-03T03:00:00.000Z')){
+                    comprasPerCliente += 1
+                }
+            }
+           
+            var result = [users[i].user_id, users[i].user_name, comprasPerCliente]
             vendasPerUser.push(result)
+
+            comprasPerCliente = 0 
         } 
         return vendasPerUser
     }
@@ -122,21 +117,4 @@ class UsuarioDAO{
 
 
 module.exports = new UsuarioDAO;
-//udao = new UsuarioDAO();
 
-//udao.inserir("bangus", "rua bingus", "bangus@bingus.bin", "bangusLog", "bangusPass")
-//udao.deletar(2);
-
-//var result = udao.obter(1);
-
-//console.log(udao.obter(1));
-
-//udao.obter(1).then(x => console.log(x));
-
-
-//*/
-//udao.atualizar(1, "bingus", "rua bingus", "bingus@bingus.bin", "bingusLog", "bingusPass");
-
-//console.log("Testes: ", udao.confereSenha(10, "bingusPass"));
-
-//udao.confereSenha(1, 'bingusPass').then(x => console.log(x));
