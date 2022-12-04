@@ -1,5 +1,5 @@
 
-const db = require("./dbConfig");
+const db = require("../dbConfig");
 const { log } = require("console");
 
 class ProdutoDAO{
@@ -37,10 +37,9 @@ class ProdutoDAO{
 
     async obterTodos(){
         let queryString = `SELECT * FROM produto`;
-        
-        await db.connect();
+   
         let results = await db.query(queryString);
-        await db.end();
+     
         
         console.log("Dados obtidos:", results.rows);
         return results.rows;
@@ -70,9 +69,18 @@ class ProdutoDAO{
         console.log("Dados atualizados");
     }
 
+    async obterOutEstoque(){
+        const produtos = this.obterTodos()
+        let produtoOut = []
+        for (let i = 0; i < produtos.length; i++){
+            if (produtos[i].quantidade == 0){
+                var result = [produtos[i].id, produtos[i].descricao, produtos[i].preco]
+                produtoOut.push(result)
+            }
+        return produtoOut
+        }
+    }
 }
 
-//pdao = new ProdutoDAO();
 
-//pdao.inserir("Carta de Dragão", 10.00, {message: "Imagem massa"}, 10)
-//pdao.obterTodos();
+module.exports = new ProdutoDAO;
