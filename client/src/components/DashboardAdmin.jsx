@@ -162,7 +162,7 @@ const DashbordAdmin = (props) => {
         })
 
     }
-    //---------------Relatorio----------------
+    //---------------Relatorio Produto----------------
     const [RelatorioP, setRelatorioP] = useState([])
 
     async function getRelatorioProdutos(){
@@ -175,11 +175,11 @@ const DashbordAdmin = (props) => {
             })
 
       
-            console.log(result);
+            
             const parseRes = await result.json()
-            console.log("oi");
+            parseRes.sort((a, b) => b[0] - a[0]);
 
-            console.log(parseRes);
+    
             setRelatorioP(parseRes);;
 
         } catch (err) {
@@ -276,7 +276,7 @@ const DashbordAdmin = (props) => {
                         <tr style={table_style}>
                             <th style={table_style}>PRODUTO</th>
                             <th style={table_style}>ID PRODUTO</th>
-                            <th style={table_style}>PREÇO</th>
+                            <th style={table_style}>PREÇO (R$)</th>
                         </tr>
                     </thead>
                     <tbody>
