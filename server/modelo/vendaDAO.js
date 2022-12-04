@@ -67,7 +67,7 @@ class VendaDAO{
     }
     
     async getVendasPerUser(id_user){
-        let queryString = `Select venda.id, users.user_name, produto.id, produto.descricao, venda_produto.quantidade,venda.data from users  inner join (venda inner join (venda_produto inner join produto on produto.id = venda_produto.id_produto) on venda_produto.id_venda = venda.id) on venda.id_user = users.user_id where users.user_id = $1;`
+        let queryString = `Select venda.id, users.user_name ,venda.data from users inner join venda on venda.id_user = users.user_id where users.user_id = $1;`
         let values = [id_user]
         let results
 
