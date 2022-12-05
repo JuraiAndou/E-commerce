@@ -45,7 +45,7 @@ router.get('/get-specific-sales', authorization, async (req, res) => {
 
 });
 
-router.get('/get-allUser-sales', authorization, async (req, res) => {
+router.get('/get-allUser-sales', authorization, priviledge, async (req, res) => {
     
     try {
         result = await cDAO.obterComprasPerUser()
@@ -56,7 +56,7 @@ router.get('/get-allUser-sales', authorization, async (req, res) => {
 
 });
 
-router.get('/get-vendas-user', authorization, async (req, res) => {
+router.get('/get-vendas-user', authorization, priviledge, async (req, res) => {
 
     try {
         const user  = req.header('user')
@@ -74,11 +74,23 @@ router.post('/remove-venda-client', authorization, async (req, res) => {
     try {
         console.log(prod);
        
-
+        
     } catch (err) {
         console.error(err.message);
     }
 
 });
+
+router.get('/get-vendas-per-day', authorization, priviledge, async (req, res) => {
+    try {
+        const initialDate = (req.query.date_int != undefined) ? new Date(req.query.date_int) : new Date(0)
+        const final_date = (req.query.date_fnl != undefined) ? new Date(req.query.date_fnl) : Date.now()
+        result = await vDAO.filterPricePerDate(initialDate, final_date)
+
+        res.json(result)
+    } catch (err) {
+        console.error(err);
+    }
+})
 
 module.exports = router

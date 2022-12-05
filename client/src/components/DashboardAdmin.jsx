@@ -134,6 +134,7 @@ const DashbordAdmin = (props) => {
 
             const parseRes = await response.json()
             setCliente(parseRes)
+            console.log(parseRes[0].user_id)
 
 
         } catch (err) {
@@ -141,7 +142,7 @@ const DashbordAdmin = (props) => {
         }
     }
 
-    const [clienteCompras,setClienteCompras] = useState([])
+    const [clienteCompras, setClienteCompras] = useState([])
 
     async function getClienteCompras(userSelected) {
         const user = userSelected
@@ -149,7 +150,7 @@ const DashbordAdmin = (props) => {
             const response = await fetch("http://localhost:5000/sales/get-vendas-user", {
                 method: 'GET',
                 headers: { token: localStorage.token, user: user }
-              
+
             })
 
             const parseRes = await response.json()
@@ -160,7 +161,7 @@ const DashbordAdmin = (props) => {
         }
     }
 
-    function onClienteChange(e){
+    function onClienteChange(e) {
         const elem = document.getElementById("clientSelect");
         let valor = elem.value
         getClienteCompras(valor)
@@ -271,6 +272,30 @@ const DashbordAdmin = (props) => {
         border: '1px solid black'
     }
 
+    //---------------Relatorio Vendas por Dias----------------
+
+    const [RelatorioVendas, setRelatorioVendas] = useState([])
+
+    async function getRelatorioVendas() {
+        try {
+            const result = await fetch("http://localhost:5000/sales/get-vendas-per-day?" + new URLSearchParams({
+                date_int: '2022-02-01',
+                date_fnl: '2022-12-03'
+            }), {
+                method: 'GET',
+                headers: { token: localStorage.token }
+            })
+            
+            const parseRes = await result.json()
+            console.log('test');
+            console.log(parseRes);
+        } catch (err) {
+            toast.error('Fail to generate sales report')
+            console.error(err.stack)
+        }
+    }
+
+
     // Atualizar a cada renderização -----------------
     useEffect(() => {// Called everytime the component is rendered
         getName();
@@ -337,15 +362,14 @@ const DashbordAdmin = (props) => {
                         {showClientSales()}
                     </thead>
                     <tbody>
-                       
+
                     </tbody>
                 </table>
             </Fragment>
-            
-            <br />
-            <br />
 
-            { /* <h2 > <strong>Relatório</strong></h2> 
+            <br />
+            <br />
+            <h2 > <strong>Relatório</strong></h2>
             <Fragment>
                 <h5>Compras feitas por cliente</h5>
                 <table width="400" cellPadding="5"
@@ -379,8 +403,39 @@ const DashbordAdmin = (props) => {
                     </tbody>
                 </table>
             </Fragment>
-                */}
-                
+            <br />
+            <Fragment>
+                <div className="btnDiv">
+                    <button id="downloadBtn" value="download" onClick={() => {
+                        let text = []
+                        text.push(`\t-----[Compras Feitas por Cliente]-----\n`)
+                        for (let i = 0; i < Relatorio.length; i++) {
+                            const rel = Relatorio[i];
+                            text.push(`|id:`,rel[0], '|\t')
+                            text.push(`|nome:`,rel[1], '|\t')
+                            text.push(`|quantidade de compras:`,rel[2], '|\n')
+                        }
+
+                        text.push(`\n\n\t-----[Produtos Fora de Estoque]-----\n`)
+                        for (let i = 0; i < RelatorioP.length; i++) {
+                            const rel = RelatorioP[i];
+                            text.push(`|id:`,rel[0], '|\t')
+                            text.push(`|Descrição:`,rel[1], '|\t')
+                            text.push(`|Preço:R$`,rel[2], '|\n')
+                        }
+
+                        const file = new Blob(text, { type: 'text/plain' })
+
+                        const element = document.createElement("a")
+                        element.href = URL.createObjectURL(file)
+                        element.download = "Relatório" + Date.now() + ".txt"
+
+                        document.body.appendChild(element)
+                        element.click()
+                    }} className="btn btn-secondary">Download</button>
+                </div>
+            </Fragment>
+            <br />
             <Link to="/edit" className="btn">Edit Profile</Link>
             <button
                 className="btn btn-primary"
