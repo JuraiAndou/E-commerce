@@ -2,6 +2,7 @@ const router = require('express').Router()
 const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const bcrypt = require('bcrypt')
+const cDAO = require ("../modelo/usuarioDAO")
 
 
 router.get('/', authorization, async (req, res) => {
@@ -78,5 +79,16 @@ router.post('/deleteUser', authorization, async (req, res) => {
         res.status(500).json('Server Error')
     }
 })
+
+router.get('/get-all-users', authorization, async (req, res) => {
+    
+    try {
+        result = await cDAO.obterTodos()
+        res.json(result)
+    } catch (err) {
+        console.error(err.message);
+    }
+
+});
 
 module.exports = router
