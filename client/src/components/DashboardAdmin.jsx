@@ -313,14 +313,19 @@ const DashbordAdmin = (props) => {
     }
 
     function onChageVInitialDate(e) {
-        const newDate = moment(new Date(e.target.value)).format('YYYY-MM-DD')
+        let someDate = new Date(e.target.value)
+        someDate.setDate(someDate.getDate() + 1)
+        const newDate = moment(someDate).format('YYYY-MM-DD')
         setVInitialDate(newDate)
 
         getRelatorioVendas()
     }
 
     function onChageVFinalDate(e) {
-        const newDate = moment(new Date(e.target.value)).format('YYYY-MM-DD')
+        let someDate = new Date(e.target.value)
+        someDate.setDate(someDate.getDate() + 1)
+        const newDate = moment(someDate).format('YYYY-MM-DD')
+        console.log(e.target.value);
         setVFinalDate(newDate)
 
         getRelatorioVendas()
@@ -478,6 +483,13 @@ const DashbordAdmin = (props) => {
                             text.push(`|id:`, rel[0], '|\t')
                             text.push(`|Descrição:`, rel[1], '|\t')
                             text.push(`|Preço:R$`, rel[2], '|\n')
+                        }
+
+                        text.push(`\n\n\t-----[Vendas por dia]-----\n`)
+                        for (let i = 0; i < RelatorioVendas.length; i++) {
+                            const rel = RelatorioVendas[i];
+                            text.push(`|Data:`, rel[0], '|\t')
+                            text.push(`|Valor:R$`, rel[1], '|\n')
                         }
 
                         const file = new Blob(text, { type: 'text/plain' })
