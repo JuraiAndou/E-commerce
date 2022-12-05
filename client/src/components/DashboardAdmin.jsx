@@ -136,7 +136,6 @@ const DashbordAdmin = (props) => {
 
             const parseRes = await response.json()
             setCliente(parseRes)
-            console.log(parseRes[0].user_id)
 
 
         } catch (err) {

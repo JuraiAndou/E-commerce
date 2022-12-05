@@ -72,7 +72,13 @@ router.get('/get-vendas-user', authorization, priviledge, async (req, res) => {
 router.post('/remove-venda-client', authorization, async (req, res) => {
     const { prod } = req.query
     try {
-        console.log(prod);
+        const remove_venda = await pool.query('DELETE FROM public.venda WHERE id = $1; ', [
+            prod
+        ])
+        const remove_vendaProduto = await pool.query('DELETE FROM venda_produto WHERE id_venda = $1; ', [
+            prod
+        ])
+        res.json(remove_vendaProduto.rowCount)
        
         
     } catch (err) {
