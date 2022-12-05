@@ -17,6 +17,7 @@ const UserSales = () => {
             });
             
             const parseRes = await response.json();
+            console.log("Vendas: ");
             console.log(parseRes);
             setSales(parseRes);
 

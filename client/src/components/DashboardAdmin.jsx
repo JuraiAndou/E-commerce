@@ -28,6 +28,7 @@ const DashbordAdmin = (props) => {
     const logout = (e) => {
         e.preventDefault()// Prevents a refresh
         localStorage.removeItem('token')
+        localStorage.removeItem('carrinho')
         props.setAuth(false)
         toast.success("Logged out successfully")
     }
@@ -202,7 +203,10 @@ const DashbordAdmin = (props) => {
 
     async function getRelatorio() {
         try {
-            const result = await fetch("http://localhost:5000/sales/get-allUser-sales", {
+            const result = await fetch("http://localhost:5000/sales/get-allUser-sales?" + new URLSearchParams({
+                date_int: '2022-09-10',
+                date_fnl: '2022-12-06'
+            }), {
                 method: 'GET',
                 headers: { token: localStorage.token }
             })
@@ -347,7 +351,8 @@ const DashbordAdmin = (props) => {
                 Preço: <br /><input type="text" name="preco" placeholder="Preço" value={productData.preco} onChange={e => { onChangeProduct(e) }} /><br />
                 Quantidade: <br /><input type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} /><br />
                 Categoria: <br /><select id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
-                    <option value="---">Selecione a categoria</option>
+                    <option value="---" disabled selected hidden>Selecione a categoria</option>
+                    
                     {
                         categoria.length > 0 &&
                         categoria.map((catego) => (

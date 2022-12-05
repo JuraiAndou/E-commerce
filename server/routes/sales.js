@@ -3,7 +3,9 @@ const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
 const cDAO = require('../modelo/usuarioDAO')
+const pDAO = require('../modelo/produtoDAO')
 const vDAO = require('../modelo/vendaDAO')
+const vpDAO = require('../modelo/venda_produtoDAO')
 
 
 router.get('/get-sales', authorization, priviledge, async (req, res) => {
@@ -15,7 +17,7 @@ router.get('/get-sales', authorization, priviledge, async (req, res) => {
     try {
         //const{user_id} = req.
         const sales = await pool.query(queryString);
-        console.log(sales.rows);
+        //console.log(sales.rows);
 
         res.json(sales.rows);
 
@@ -33,11 +35,13 @@ router.get('/get-specific-sales', authorization, async (req, res) => {
     try {
 
         const id = req.user.id;
+        //console.log("user id:");
+        //console.log(id);
         const sales = await pool.query(queryString, [id])
 
         res.json(sales.rows);
-
-        console.log(sales.rows);
+        //console.log("Vendas query: ");
+        //console.log(sales.rows);
 
     } catch (err) {
         console.error(err.message);
@@ -45,10 +49,66 @@ router.get('/get-specific-sales', authorization, async (req, res) => {
 
 });
 
+router.post('/post-sale', authorization, async(req, res) => {
+    let queryString = ``
+    let result
+    try {
+        const products = req.body;
+
+        /**
+         * Reduzir do estoque
+         * 
+         */
+
+        let precoTotal = 0;
+
+        for(let i=0; i<products.length; i++){
+            //console.log("AOBA " + i);
+            //console.log(products[i].id, products[i].quantidade);
+            pDAO.atualizarQuantidade(products[i].id, products[i].quantidade);
+            precoTotal += products[i].quantidade * products[i].preco
+        }
+        //let result = await pDAO.obterTodos();
+        
+        /**
+         * Criar nova venda
+         */
+        //console.log("Olha a dataaaaaaaaa");
+        //console.log(new Date(Date.now()));
+        const resVendas = await vDAO.inserir(new Date(Date.now()), req.user.id, precoTotal)
+        //console.log("OLHA A VENDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        //console.log(resVendas);
+
+        const parseVendas = resVendas.rows[0]
+
+        //console.log(parseVendas);
+
+        /**
+         * Conectar as tabelas
+         */
+        
+        for(let i=0; i<products.length; i++){
+            //console.log("AOBA " + i);
+            //console.log(products[i].id, products[i].quantidade);
+            vpDAO.inserir(parseVendas.id, products[i].id , products[i].quantidade);
+        }
+        //*/
+
+
+        res.json(parseVendas);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
+
 router.get('/get-allUser-sales', authorization, priviledge, async (req, res) => {
     
     try {
-        result = await cDAO.obterComprasPerUser()
+        const initialDate = (req.query.date_int != undefined) ? new Date(req.query.date_int) : new Date(0)
+        const final_date = (req.query.date_fnl != undefined) ? new Date(req.query.date_fnl) : Date.now()
+        result = await cDAO.obterComprasPerUser(initialDate, final_date)
         res.json(result)
     } catch (err) {
         console.error(err.message);
@@ -61,6 +121,7 @@ router.get('/get-vendas-user', authorization, priviledge, async (req, res) => {
     try {
         const user  = req.header('user')
         result = await vDAO.getVendasPerUser(user)
+        
         res.json(result)
 
     } catch (err) {
@@ -98,5 +159,6 @@ router.get('/get-vendas-per-day', authorization, priviledge, async (req, res) =>
         console.error(err);
     }
 })
+
 
 module.exports = router

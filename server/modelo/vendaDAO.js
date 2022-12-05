@@ -1,18 +1,20 @@
 
 const db = require("../dbConfig");
+const { log } = require("console");
 
 class VendaDAO{
-    async inserir(data, id_usuario) {
-        let queryString = `INSERT INTO venda(data, id_usuario) VALUES ($1, $2) RETURNING * `;
-        let values = [data, id_usuario];
+    async inserir(data, id_usuario, preco_final) {
+        let queryString = `INSERT INTO venda(data, id_user, preco_final) VALUES ($1, $2, $3) RETURNING * `;
+        let values = [data, id_usuario, preco_final];
         try {
             const res = await db.query(queryString, values)
-            console.log(res)
-
+            //console.log(res)
+            //console.log("Dados inseridos");
+            return res
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
-        console.log("Dados inseridos");
+        
     }
 
     async deletar(id){
@@ -20,12 +22,13 @@ class VendaDAO{
         let queryString = `DELETE FROM venda WHERE id = $1 RETURNING *`;
         try {
             const res = await db.query(queryString, [id])
-            console.log(res.rows)
+            //console.log(res.rows)
+            console.log("Dados deletados");
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
         
-        console.log("Dados deletados");
+        
     }
 
     async obterTodos(){
@@ -34,7 +37,7 @@ class VendaDAO{
             let results = await db.query(queryString);
             return results.rows;
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
     
     }
@@ -46,7 +49,7 @@ class VendaDAO{
             results = await db.query(queryString, [id]);
             return results.rows;
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }   
     }
 
@@ -59,7 +62,7 @@ class VendaDAO{
             await db.query(queryString, values);
             console.log("Dados atualizados")
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
       ;
     }
@@ -72,6 +75,8 @@ class VendaDAO{
         try {
             results = await db.query(queryString, values);
             return results.rows;
+            
+
         } catch (err) {
             console.error(err.stack)
         }
