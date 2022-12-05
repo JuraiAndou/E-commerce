@@ -137,6 +137,7 @@ const DashbordAdmin = (props) => {
 
             const parseRes = await response.json()
             setCliente(parseRes)
+            console.log(parseRes[0].user_id)
 
 
         } catch (err) {
@@ -299,7 +300,7 @@ const DashbordAdmin = (props) => {
                 {
                     cliente.length > 0 &&
                     cliente.map((client) => (
-                        <option key={client.id} value={client.id}>{client.user_email}</option>
+                        <option key={client.user_id} value={cliente.user_id}>{client.user_email}</option>
                     ))
                 }
             </select>
