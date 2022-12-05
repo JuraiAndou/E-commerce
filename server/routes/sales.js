@@ -3,6 +3,7 @@ const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
 const cDAO = require('../modelo/usuarioDAO')
+const vDAO = require('../modelo/vendaDAO')
 
 
 router.get('/get-sales', authorization, priviledge, async (req, res) => {
@@ -55,6 +56,20 @@ router.get('/get-allUser-sales', authorization, async (req, res) => {
 
 });
 
+router.get('/get-vendas-user', authorization, async (req, res) => {
+
+    try {
+        const user  = req.header('user')
+        console.log(user);
+        result = await vDAO.getVendasPerUser(user)
+        
+        res.json(result)
+
+    } catch (err) {
+        console.error(err.message);
+    }
+
+});
 
 
 module.exports = router

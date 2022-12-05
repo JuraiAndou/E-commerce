@@ -118,13 +118,60 @@ const DashbordAdmin = (props) => {
             console.error(err.message);
         }
     }
-
     function onCatChange(e) {
         const elem = document.getElementById("catSelect");
         let value = elem.value
-        //let text = elem.options[]
+
         setPoductData({ ...productData, categoria: elem.value });
-        //console.log("Id da categoria: " + value);
+    }
+  
+    //------------Relatorio de cada cliente-------------
+    const [cliente, setCliente] = useState([])
+
+    async function getCliente() {// Recuperar as categorias do Banco de Dados
+        try {
+            const response = await fetch("http://localhost:5000/dashboard/get-all-users", {
+                method: 'GET',
+                headers: { token: localStorage.token }
+            })
+
+            const parseRes = await response.json()
+            setCliente(parseRes)
+
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const [clienteCompras,setClienteCompras] = useState([])
+
+    async function getClienteCompras() {
+        const user = 0
+        try {
+            const response = await fetch("http://localhost:5000/sales/get-vendas-user", {
+                method: 'GET',
+                headers: { token: localStorage.token, user: user }
+              
+            })
+
+            const parseRes = await response.json()
+            setClienteCompras(parseRes)
+            console.log(parseRes);
+           
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    function onClienteChange(e){
+        const elem = document.getElementById("clientSelect");
+        let valor = elem.value
+        console.log(valor);
+    }
+
+    function showClientSales (){       
+    
     }
 
     //---------------Relatorio----------------
@@ -142,8 +189,6 @@ const DashbordAdmin = (props) => {
             parseRes.sort((a, b) => b[2] - a[2]);
 
             setRelatorio(parseRes);
-            console.log(parseRes);
-
         } catch (err) {
             console.error(err.message);
         }
@@ -154,8 +199,8 @@ const DashbordAdmin = (props) => {
             return (
                 <tr key={rel[0]} style={table_style}>
                     <td style={table_style}>{rel[1]}</td>
-                    <td  style={table_style}>{rel[0]}</td>
-                    <td  style={table_style}>{rel[2]}</td>
+                    <td style={table_style}>{rel[0]}</td>
+                    <td style={table_style}>{rel[2]}</td>
                 </tr>
             )
 
@@ -165,8 +210,8 @@ const DashbordAdmin = (props) => {
     //---------------Relatorio Produto----------------
     const [RelatorioP, setRelatorioP] = useState([])
 
-    async function getRelatorioProdutos(){
-    
+    async function getRelatorioProdutos() {
+
         try {
 
             const result = await fetch("http://localhost:5000/product/obter-products-out", {
@@ -174,12 +219,12 @@ const DashbordAdmin = (props) => {
                 headers: { token: localStorage.token }
             })
 
-      
-            
+
+
             const parseRes = await result.json()
             parseRes.sort((a, b) => b[0] - a[0]);
 
-    
+
             setRelatorioP(parseRes);;
 
         } catch (err) {
@@ -188,20 +233,18 @@ const DashbordAdmin = (props) => {
     }
 
     function showRelatorioP() {
-       
+
         return RelatorioP.map((rel) => {
             return (
                 <tr key={rel[0]} style={table_style}>
                     <td style={table_style}>{rel[1]}</td>
-                    <td  style={table_style}>{rel[0]}</td>
-                    <td  style={table_style}>{rel[2]}</td>
+                    <td style={table_style}>{rel[0]}</td>
+                    <td style={table_style}>{rel[2]}</td>
                 </tr>
             )
 
         })
     }
-
-
 
     let table_style = {
         border: '1px solid black'
@@ -213,7 +256,8 @@ const DashbordAdmin = (props) => {
         getCategorias();
         getRelatorio();
         getRelatorioProdutos();
-
+        getCliente()
+        getClienteCompras()
     }, [])
     // -----------------------------------------------
 
@@ -250,9 +294,39 @@ const DashbordAdmin = (props) => {
             <br />
             <br />
 
-            <h2 > <strong>Relatório</strong></h2>
+            Relatorio de Compra do cliente: <br/>
+            Cliente:  <select id="clientSelect" name="cliente" onChange={e => { onClienteChange(e) }}>
+                {
+                    cliente.length > 0 &&
+                    cliente.map((client) => (
+                        <option key={client.id} value={client.id}>{client.user_email}</option>
+                    ))
+                }
+            </select>
+
             <Fragment>
-            <h5>Compras feitas por cliente</h5>
+                <table width="400" cellPadding="5"
+                    style={table_style}>
+                    <thead>
+                        <tr style={table_style}>
+                            <th style={table_style}>PRODUTO</th>
+                            <th style={table_style}>PREÇO</th>
+                            <th style={table_style}>QUANTIDADE</th>
+                            {showClientSales()}
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    </tbody>
+                </table>
+            </Fragment>
+            
+            <br />
+            <br />
+
+            { /* <h2 > <strong>Relatório</strong></h2> 
+            <Fragment>
+                <h5>Compras feitas por cliente</h5>
                 <table width="400" cellPadding="5"
                     style={table_style}>
                     <thead>
@@ -267,10 +341,10 @@ const DashbordAdmin = (props) => {
                     </tbody>
                 </table>
             </Fragment>
-            <br/>
+            <br />
             <Fragment>
-            <h5>Produtos fora de estoque</h5>
-            <table width="400" cellPadding="5"
+                <h5>Produtos fora de estoque</h5>
+                <table width="400" cellPadding="5"
                     style={table_style}>
                     <thead>
                         <tr style={table_style}>
@@ -284,15 +358,16 @@ const DashbordAdmin = (props) => {
                     </tbody>
                 </table>
             </Fragment>
-
+                */}
+                
             <Link to="/edit" className="btn">Edit Profile</Link>
             <button
                 className="btn btn-primary"
                 onClick={e => logout(e)}
             >Logout</button>
         </Fragment>
-        
-        
+
+
     )
 }
 
