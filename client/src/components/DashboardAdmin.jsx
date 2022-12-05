@@ -338,6 +338,9 @@ const DashbordAdmin = (props) => {
     }, [])
     // -----------------------------------------------
 
+    useEffect(()=>{
+        getRelatorioVendas();
+    }, [VInintialDate, VFinalDate])
 
     //<br/><input type="text" name="categoria" placeholder="Categoria" value={productData.categoria} onChange={e=>{onChangeProduct(e)}}/><br/>
     return (
