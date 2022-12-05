@@ -31,10 +31,12 @@ app.listen(port, () => {
 
 const vDAO = require("./modelo/vendaDAO")
 
+/*
 test = async () => {
   console.log(await vDAO.filterPricePerDate())
 }
 test()
+*/
 
 // test = new usuario.Usuario()
 // test.vendas = 1

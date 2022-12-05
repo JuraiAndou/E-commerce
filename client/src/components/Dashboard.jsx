@@ -24,6 +24,8 @@ const Dashbord = (props) => {
     const logout = (e) => {
         e.preventDefault()// Prevents a refresh
         localStorage.removeItem('token')
+        localStorage.removeItem('carrinho')
+        
         props.setAuth(false)
         toast.success("Logged out successfully")
     }

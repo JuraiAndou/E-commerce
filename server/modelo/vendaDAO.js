@@ -3,17 +3,18 @@ const db = require("../dbConfig");
 const { log } = require("console");
 
 class VendaDAO{
-    async inserir(data, id_usuario) {
-        let queryString = `INSERT INTO venda(data, id_usuario) VALUES ($1, $2) RETURNING * `;
-        let values = [data, id_usuario];
+    async inserir(data, id_usuario, preco_total) {
+        let queryString = `INSERT INTO venda(data, id_user, preco_total) VALUES ($1, $2, $3) RETURNING * `;
+        let values = [data, id_usuario, preco_total];
         try {
             const res = await db.query(queryString, values)
-            console.log(res)
-
+            //console.log(res)
+            //console.log("Dados inseridos");
+            return res
         } catch (err) {
             console.log(err.stack)
         }
-        console.log("Dados inseridos");
+        
     }
 
     async deletar(id){
