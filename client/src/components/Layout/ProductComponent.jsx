@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 
-const ProductComponent = ({ id, nome, preco: price, quantidade, categoria, categorias, id_categoria, isAdministrator}) => {
+const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, categorias, id_categoria, isAdministrator}) => {
 
     /**
      * Editing State
@@ -168,7 +168,9 @@ const ProductComponent = ({ id, nome, preco: price, quantidade, categoria, categ
                         </div>
                     </Fragment>
                 ) : (
-                    <span></span>
+                    <Fragment>
+                        <button onClick={(e) =>  {add(e, {id: id, descricao: nome, preco: price, quantidade: 1})}} className="btn btn-primary"> Adicionar</button>
+                    </Fragment>
                 )}
             </div>
         </div>

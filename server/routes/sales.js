@@ -33,11 +33,13 @@ router.get('/get-specific-sales', authorization, async (req, res) => {
     try {
 
         const id = req.user.id;
+        //console.log("user id:");
+        //console.log(id);
         const sales = await pool.query(queryString, [id])
 
         res.json(sales.rows);
-
-        console.log(sales.rows);
+        //console.log("Vendas query: ");
+        //console.log(sales.rows);
 
     } catch (err) {
         console.error(err.message);
@@ -101,5 +103,6 @@ router.get('/get-vendas-per-day', authorization, priviledge, async (req, res) =>
         console.error(err);
     }
 })
+
 
 module.exports = router

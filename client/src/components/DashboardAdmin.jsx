@@ -27,6 +27,7 @@ const DashbordAdmin = (props) => {
     const logout = (e) => {
         e.preventDefault()// Prevents a refresh
         localStorage.removeItem('token')
+        localStorage.removeItem('carrinho')
         props.setAuth(false)
         toast.success("Logged out successfully")
     }
@@ -289,12 +290,23 @@ const DashbordAdmin = (props) => {
             })
             
             const parseRes = await result.json()
-            console.log('test');
-            console.log(parseRes);
+            setRelatorioVendas(parseRes)
         } catch (err) {
             toast.error('Fail to generate sales report')
             console.error(err.stack)
         }
+    }
+
+    function showRelatorioVendas() {
+        return RelatorioVendas.map((rel, i) => {
+            console.log(rel)
+            return (
+                <tr key={i} style={table_style}>
+                    <td style={table_style}>{rel[0]}</td>
+                    <td style={table_style}>{rel[1]}</td>
+                </tr>
+            )
+        })
     }
 
 
@@ -305,6 +317,7 @@ const DashbordAdmin = (props) => {
         getRelatorio();
         getRelatorioProdutos();
         getCliente()
+        getRelatorioVendas()
     }, [])
     // -----------------------------------------------
 
@@ -402,6 +415,22 @@ const DashbordAdmin = (props) => {
                     </thead>
                     <tbody>
                         {showRelatorioP()}
+                    </tbody>
+                </table>
+            </Fragment>
+            <br />
+            <Fragment>
+                <h5>Produtos fora de estoque</h5>
+                <table width="400" cellPadding="5"
+                    style={table_style}>
+                    <thead>
+                        <tr style={table_style}>
+                            <th style={table_style}>DATA</th>
+                            <th style={table_style}>VALOR (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {showRelatorioVendas()}
                     </tbody>
                 </table>
             </Fragment>
