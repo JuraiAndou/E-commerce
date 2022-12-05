@@ -65,7 +65,6 @@ const DashbordAdmin = (props) => {
             console.error(err.message);
         }
     }
-
     const [categoryData, setCategoryData] = useState({
         descricao: "",
     });
@@ -91,7 +90,7 @@ const DashbordAdmin = (props) => {
                 const parseRes = await response.json()
                 toast.success('Category ' + categoryData.descricao + ' added')
 
-                console.log(parseRes);
+    
             } else {
                 toast.error('Product description empty')
             }
@@ -101,9 +100,7 @@ const DashbordAdmin = (props) => {
     }
 
     //---------------Categorias-----------------
-
     const [categoria, setCategoria] = useState([])
-
     async function getCategorias() {// Recuperar as categorias do Banco de Dados
         try {
             const response = await fetch("http://localhost:5000/category/get-categories", {
@@ -119,17 +116,88 @@ const DashbordAdmin = (props) => {
             console.error(err.message);
         }
     }
-
     function onCatChange(e) {
         const elem = document.getElementById("catSelect");
         let value = elem.value
-        //let text = elem.options[]
+
         setPoductData({ ...productData, categoria: elem.value });
-        //console.log("Id da categoria: " + value);
     }
 
-    //---------------Relatorio----------------
+    //------------Relatorio de cada cliente-------------
+    const [cliente, setCliente] = useState([])
 
+    async function getCliente() {// Recuperar as categorias do Banco de Dados
+        try {
+            const response = await fetch("http://localhost:5000/dashboard/get-all-users", {
+                method: 'GET',
+                headers: { token: localStorage.token }
+            })
+
+            const parseRes = await response.json()
+            setCliente(parseRes)
+
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const [clienteCompras, setClienteCompras] = useState([])
+
+    async function getClienteCompras(userSelected) {
+        const user = userSelected
+        try {
+            const response = await fetch("http://localhost:5000/sales/get-vendas-user", {
+                method: 'GET',
+                headers: { token: localStorage.token, user: user }
+
+            })
+
+            const parseRes = await response.json()
+            setClienteCompras(parseRes)
+           
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    function onClienteChange(e) {
+        const elem = document.getElementById("clientSelect");
+        let valor = elem.value
+        getClienteCompras(valor)
+        
+    }
+
+    function showClientSales (){       
+        return clienteCompras.map((ind) => {
+            return (
+                <Fragment>
+                    <tr key={ind.id} style={table_style}>
+                    <td style={table_style}><button className="btn btn-danger" onClick={e => { onRemoveSale(e, ind.id)}} >   X  </button>   {ind.id}</td>
+                    <td style={table_style}>R${ind.preco_final}</td>
+                    <td style={table_style}>{ind.data} </td>
+                   </tr>
+                </Fragment>   
+            )
+        })
+    }
+    //----------Exclusão de compra cliente-----------
+    async function onRemoveSale(e,id_venda){
+        try {
+            const response = await fetch("http://localhost:5000/sales/remove-venda-client?prod=" + id_venda,{
+                method: 'POST',
+                headers: { token: localStorage.token },
+            })
+            const parseRes = await response.json()
+            window.location.reload(false)
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+
+    //---------------Relatorio----------------
     const [Relatorio, setRelatorio] = useState([])
 
     async function getRelatorio() {
@@ -143,8 +211,6 @@ const DashbordAdmin = (props) => {
             parseRes.sort((a, b) => b[2] - a[2]);
 
             setRelatorio(parseRes);
-            console.log(parseRes);
-
         } catch (err) {
             console.error(err.message);
         }
@@ -154,9 +220,9 @@ const DashbordAdmin = (props) => {
         return Relatorio.map((rel) => {
             return (
                 <tr key={rel[0]} style={table_style}>
-                    <td style={table_style}>{rel[1]}</td>
-                    <td  style={table_style}>{rel[0]}</td>
-                    <td  style={table_style}>{rel[2]}</td>
+                    <td style={table_style}>{rel[1]}</td> 
+                    <td style={table_style}>{rel[0]}</td>
+                    <td style={table_style}>{rel[2]}</td>
                 </tr>
             )
 
@@ -166,8 +232,8 @@ const DashbordAdmin = (props) => {
     //---------------Relatorio Produto----------------
     const [RelatorioP, setRelatorioP] = useState([])
 
-    async function getRelatorioProdutos(){
-    
+    async function getRelatorioProdutos() {
+
         try {
 
             const result = await fetch("http://localhost:5000/product/obter-products-out", {
@@ -175,12 +241,12 @@ const DashbordAdmin = (props) => {
                 headers: { token: localStorage.token }
             })
 
-      
-            
+
+
             const parseRes = await result.json()
             parseRes.sort((a, b) => b[0] - a[0]);
 
-    
+
             setRelatorioP(parseRes);;
 
         } catch (err) {
@@ -189,24 +255,57 @@ const DashbordAdmin = (props) => {
     }
 
     function showRelatorioP() {
-       
+
         return RelatorioP.map((rel) => {
             return (
                 <tr key={rel[0]} style={table_style}>
                     <td style={table_style}>{rel[1]}</td>
-                    <td  style={table_style}>{rel[0]}</td>
-                    <td  style={table_style}>{rel[2]}</td>
+                    <td style={table_style}>{rel[0]}</td>
+                    <td style={table_style}>{rel[2]}</td>
                 </tr>
             )
 
         })
     }
 
-
-
     let table_style = {
         border: '1px solid black'
     }
+
+    //---------------Relatorio Vendas por Dias----------------
+
+    const [RelatorioVendas, setRelatorioVendas] = useState([])
+
+    async function getRelatorioVendas() {
+        try {
+            const result = await fetch("http://localhost:5000/sales/get-vendas-per-day?" + new URLSearchParams({
+                date_int: '2022-02-01',
+                date_fnl: '2022-12-03'
+            }), {
+                method: 'GET',
+                headers: { token: localStorage.token }
+            })
+            
+            const parseRes = await result.json()
+            setRelatorioVendas(parseRes)
+        } catch (err) {
+            toast.error('Fail to generate sales report')
+            console.error(err.stack)
+        }
+    }
+
+    function showRelatorioVendas() {
+        return RelatorioVendas.map((rel, i) => {
+            console.log(rel)
+            return (
+                <tr key={i} style={table_style}>
+                    <td style={table_style}>{rel[0]}</td>
+                    <td style={table_style}>{rel[1]}</td>
+                </tr>
+            )
+        })
+    }
+
 
     // Atualizar a cada renderização -----------------
     useEffect(() => {// Called everytime the component is rendered
@@ -214,7 +313,8 @@ const DashbordAdmin = (props) => {
         getCategorias();
         getRelatorio();
         getRelatorioProdutos();
-
+        getCliente()
+        getRelatorioVendas()
     }, [])
     // -----------------------------------------------
 
@@ -222,7 +322,7 @@ const DashbordAdmin = (props) => {
     //<br/><input type="text" name="categoria" placeholder="Categoria" value={productData.categoria} onChange={e=>{onChangeProduct(e)}}/><br/>
     return (
         <Fragment>
-            <h1>Dashboard Admin</h1>
+            <br/>
             <p>Hello <strong>{name.split(' ')[0]}</strong></p>
 
             Adicionar novo produto:
@@ -239,21 +339,51 @@ const DashbordAdmin = (props) => {
                         ))
                     }
                 </select>
-                <input type="submit" />
+                <br/>
+                <input type="submit" className="btn btn-primary"/>
             </form>
             <br />
 
             Adicionar nova categoria:
             <form onSubmit={onSubmitCategory}>
                 <input type="text" name="descricao" placeholder="Descrição" value={categoryData.descricao} onChange={e => { onChangeCategory(e) }} /><br />
-                <input type="submit" />
+                <input type="submit" className="btn btn-primary"/>
             </form>
             <br />
             <br />
 
+            <h3><strong>Relatorio de vendas pra o cliente:</strong></h3>
+            Cliente: <select id="clientSelect" name="cliente" onChange={e => { onClienteChange(e) }} className="form-select" aria-label="Default select example">
+            <option value="---" disabled selected hidden >Selecione um cliente</option>                {
+                    cliente.length > 0 &&
+                    cliente.map((client) => (
+                        <option key={client.user_id} value={client.user_id}>{client.user_email}</option>
+                    ))
+                }
+            </select>
+            <br/>
+            <Fragment>
+                <table width="400" cellPadding="5"
+                    style={table_style} className="table table-dark table-striped-columns">
+                    <thead>
+                        <tr style={table_style}>
+                            <th style={table_style}>ID DA VENDA</th>
+                            <th style={table_style}>PREÇO</th>
+                            <th style={table_style}>DATA</th>
+                        </tr>
+                        {showClientSales()}
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </Fragment>
+
+            <br />
+            <br />
             <h2 > <strong>Relatório</strong></h2>
             <Fragment>
-            <h5>Compras feitas por cliente</h5>
+                <h5>Compras feitas por cliente</h5>
                 <table width="400" cellPadding="5"
                     style={table_style}>
                     <thead>
@@ -268,10 +398,10 @@ const DashbordAdmin = (props) => {
                     </tbody>
                 </table>
             </Fragment>
-            <br/>
+            <br />
             <Fragment>
-            <h5>Produtos fora de estoque</h5>
-            <table width="400" cellPadding="5"
+                <h5>Produtos fora de estoque</h5>
+                <table width="400" cellPadding="5"
                     style={table_style}>
                     <thead>
                         <tr style={table_style}>
@@ -285,15 +415,63 @@ const DashbordAdmin = (props) => {
                     </tbody>
                 </table>
             </Fragment>
+            <br />
+            <Fragment>
+                <h5>Produtos fora de estoque</h5>
+                <table width="400" cellPadding="5"
+                    style={table_style}>
+                    <thead>
+                        <tr style={table_style}>
+                            <th style={table_style}>DATA</th>
+                            <th style={table_style}>VALOR (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {showRelatorioVendas()}
+                    </tbody>
+                </table>
+            </Fragment>
+            <br />
+            <Fragment>
+                <div className="btnDiv">
+                    <button id="downloadBtn" value="download" onClick={() => {
+                        let text = []
+                        text.push(`\t-----[Compras Feitas por Cliente]-----\n`)
+                        for (let i = 0; i < Relatorio.length; i++) {
+                            const rel = Relatorio[i];
+                            text.push(`|id:`,rel[0], '|\t')
+                            text.push(`|nome:`,rel[1], '|\t')
+                            text.push(`|quantidade de compras:`,rel[2], '|\n')
+                        }
 
+                        text.push(`\n\n\t-----[Produtos Fora de Estoque]-----\n`)
+                        for (let i = 0; i < RelatorioP.length; i++) {
+                            const rel = RelatorioP[i];
+                            text.push(`|id:`,rel[0], '|\t')
+                            text.push(`|Descrição:`,rel[1], '|\t')
+                            text.push(`|Preço:R$`,rel[2], '|\n')
+                        }
+
+                        const file = new Blob(text, { type: 'text/plain' })
+
+                        const element = document.createElement("a")
+                        element.href = URL.createObjectURL(file)
+                        element.download = "Relatório" + Date.now() + ".txt"
+
+                        document.body.appendChild(element)
+                        element.click()
+                    }} className="btn btn-secondary">Download</button>
+                </div>
+            </Fragment>
+            <br />
             <Link to="/edit" className="btn">Edit Profile</Link>
             <button
                 className="btn btn-primary"
                 onClick={e => logout(e)}
             >Logout</button>
         </Fragment>
-        
-        
+
+
     )
 }
 

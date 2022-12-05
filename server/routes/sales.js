@@ -48,7 +48,7 @@ router.get('/get-specific-sales', authorization, async (req, res) => {
 
 });
 
-router.get('/get-allUser-sales', authorization, async (req, res) => {
+router.get('/get-allUser-sales', authorization, priviledge, async (req, res) => {
     
     try {
         result = await cDAO.obterComprasPerUser()
@@ -58,58 +58,6 @@ router.get('/get-allUser-sales', authorization, async (req, res) => {
     }
 
 });
-
-router.post('/post-sale', authorization, async(req, res) => {
-    let queryString = ``
-    try {
-        const products = req.body;
-
-        /**
-         * Reduzir do estoque
-         * 
-         */
-
-        let precoTotal = 0;
-
-        for(let i=0; i<products.length; i++){
-            //console.log("AOBA " + i);
-            //console.log(products[i].id, products[i].quantidade);
-            pDAO.atualizarQuantidade(products[i].id, products[i].quantidade);
-            precoTotal += products[i].quantidade * products[i].preco
-        }
-        //let result = await pDAO.obterTodos();
-        
-        /**
-         * Criar nova venda
-         */
-        //console.log("Olha a dataaaaaaaaa");
-        //console.log(new Date(Date.now()));
-        const resVendas = await vDAO.inserir(new Date(Date.now()), req.user.id, precoTotal)
-        //console.log("OLHA A VENDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        //console.log(resVendas);
-
-        const parseVendas = resVendas.rows[0]
-
-        //console.log(parseVendas);
-
-        /**
-         * Conectar as tabelas
-         */
-        
-        for(let i=0; i<products.length; i++){
-            //console.log("AOBA " + i);
-            //console.log(products[i].id, products[i].quantidade);
-            vpDAO.inserir(parseVendas.id, products[i].id , products[i].quantidade);
-        }
-        //*/
-
-
-        res.json(result);
-
-    } catch (err) {
-        console.error(err.message);
-    }
-})
 
 
 
