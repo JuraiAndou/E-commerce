@@ -204,7 +204,7 @@ const DashbordAdmin = (props) => {
         try {
             const result = await fetch("http://localhost:5000/sales/get-allUser-sales?" + new URLSearchParams({
                 date_int: '2022-09-10',
-                date_fnl: '2022-12-03'
+                date_fnl: '2022-12-06'
             }), {
                 method: 'GET',
                 headers: { token: localStorage.token }
