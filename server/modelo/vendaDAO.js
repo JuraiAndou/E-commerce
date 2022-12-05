@@ -12,7 +12,7 @@ class VendaDAO{
             //console.log("Dados inseridos");
             return res
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
         
     }
@@ -22,12 +22,13 @@ class VendaDAO{
         let queryString = `DELETE FROM venda WHERE id = $1 RETURNING *`;
         try {
             const res = await db.query(queryString, [id])
-            console.log(res.rows)
+            //console.log(res.rows)
+            console.log("Dados deletados");
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
         
-        console.log("Dados deletados");
+        
     }
 
     async obterTodos(){
@@ -36,7 +37,7 @@ class VendaDAO{
             let results = await db.query(queryString);
             return results.rows;
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
     
     }
@@ -48,7 +49,7 @@ class VendaDAO{
             results = await db.query(queryString, [id]);
             return results.rows;
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }   
     }
 
@@ -61,7 +62,7 @@ class VendaDAO{
             await db.query(queryString, values);
             console.log("Dados atualizados")
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.stack)
         }
       ;
     }

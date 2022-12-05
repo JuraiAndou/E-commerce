@@ -140,8 +140,8 @@ const Home = (props) => {
             setCart([]);
             localStorage.removeItem("carrinho")
             
-            //window.location.reload()
-            setTimeout(window.location.reload())
+            window.location.reload()
+            //setTimeout(window.location.reload())
 
         } catch (err) {
             console.error(err.message);
