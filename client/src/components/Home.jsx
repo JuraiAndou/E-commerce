@@ -6,12 +6,24 @@ const Home = (props) => {
 
     async function getProdutcs() {// Gets the user name from the dashboard Server Route
         try {
-            const response = await fetch("http://localhost:5000/home/get-products", {
+            const response = await fetch("http://localhost:5000/product/get-productsWithCategory", {
                 method: 'GET',
                 headers: { token: localStorage.token }
             })
-
             const parseRes = await response.json()
+            console.log("PEGANDO PRODUTOS E CATEGORIAS");
+            console.log(parseRes);
+            
+
+            /*
+            console.log("pegando Produtos:");
+            parseRes.map(async(p)=>{
+                p.categoria = await getCategory(p.id)[0].descricao
+            })
+
+            console.log("ParseRes: ");
+            console.log(parseRes);
+            */
             setProducts(parseRes)
             
         } catch (err) {
@@ -20,45 +32,46 @@ const Home = (props) => {
     }
 
     
-    //const [category, setCategory] = useState({id: "", descricao: ""});
-    /*
-    async function getCat(id_produto){
+    const [categoria, setCategoria] = useState([]);
+    
+    async function getCategorias(){
         try {
-            console.log("bingus: ");
-            console.log(id_produto);
-            const body = {id_produto}
-
-            const response = await fetch("http://localhost:5000/category/get-category", 
+            const response = await fetch("http://localhost:5000/category/get-categories", 
             {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', token: localStorage.token},
-                body: JSON.stringify(body)
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', token: localStorage.token}
             }
             )
-            console.log("abuble");
-            console.log("");
+            
             const parseRes = await response.json();
-            console.log("BINGUS");
-            console.log(parseRes.descricao);
-            //setCategory(parseRes.descricao);
-            return parseRes
+            console.log("OLHA AS CATEGORIAS: ");
+            console.log(parseRes);
+            setCategoria(parseRes);
+            
+
         } catch (err) {
             console.error(err.message);
         }
     }
 
-    */
+    //*/
+
+
+
     useEffect(()=>{
         getProdutcs()
+        getCategorias();
     },[])
 
     return(
         <Fragment>
             <h1 className="text-center my-5">Produtos</h1>
             <div className="d-flex p-2 flex-wrap"> 
+            {console.log("OLHA OS CATS")}
+            {console.log(categoria)}
             {products.length > 0 &&
                 products.map((product) =>(
-                        <ProductComponent id={product.id} nome={product.descricao} preco={product.preco} quantidade={product.quantidade} key={product.id} isAdministrator={props.isAdministrator}/>       
+                        <ProductComponent id={product.id} nome={product.descricao} preco={product.preco} quantidade={product.quantidade} categoria={product.categoria_descricao} categorias={categoria} id_categoria={product.id_categoria} key={product.id} isAdministrator={props.isAdministrator}/>       
                 ))
             }
             </div>

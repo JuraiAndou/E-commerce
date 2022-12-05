@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 
-const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}) => {
+const ProductComponent = ({ id, nome, preco: price, quantidade, categoria, categorias, id_categoria, isAdministrator}) => {
 
     /**
      * Editing State
@@ -46,10 +46,12 @@ const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}
     const [inputs, setInputs] = useState({
         prod_descricao: nome,
         prod_preco: price,
-        prod_quantidade: quantidade
+        prod_quantidade: quantidade,
+        prod_categoria: categoria,
+        prod_categoria_id: id_categoria
     })// So you can store the value of the input
 
-    const { prod_descricao, prod_preco, prod_quantidade } = inputs
+    const { prod_descricao, prod_preco, prod_quantidade, prod_categoria_id } = inputs
 
     const onChange = (e) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value })
@@ -64,7 +66,8 @@ const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}
             const descricao = prod_descricao
             const preco = prod_preco
             const quantidade = prod_quantidade
-            const body = { descricao, preco, quantidade }
+            const categoria_id = prod_categoria_id
+            const body = { descricao, preco, quantidade, categoria_id}
             console.log(body)
             const response = await fetch("http://localhost:5000/product/update-product?prod=" + id, {
                 method: 'Post',
@@ -78,6 +81,14 @@ const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}
             console.error(err.message);
             toast.error('🚫 Product Info Update Fail')
         }
+    }
+    
+
+    function onCatChange(e){
+        const elem = document.getElementById("categoriasSelect");
+        console.log("O VALOR DA NOVA CATEGORIA");
+        console.log(elem.value);
+        setInputs({...inputs, prod_categoria_id: elem.value})
     }
     
     /*
@@ -94,6 +105,7 @@ const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}
                 {!isEditing ? (
                     <Fragment>
                         <h5 className="card-title">{nome}</h5>
+                        <p className="card-text"><strong>{categoria}</strong></p>
                         <p className="card-text"> R$ {price}</p>
                         <p className="card-text">{quantidade} itens em estoque</p>
                         
@@ -109,6 +121,16 @@ const ProductComponent = ({ id, nome, preco: price, quantidade, isAdministrator}
                             value={prod_descricao}
                             onChange={e => onChange(e)}
                         />
+
+                        <select name="categorias" id="categoriasSelect" onChange={(e)=>{onCatChange(e)}}>
+                            {
+                                categorias.length > 0 &&
+                                categorias.map((catego) => (
+                                    <option key={catego.id} value={catego.id}>{catego.descricao}</option>
+                                ))    
+                            }
+                        </select>
+                        
                         <input
                             type="number"
                             name="prod_preco"
