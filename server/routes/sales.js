@@ -60,9 +60,7 @@ router.get('/get-vendas-user', authorization, async (req, res) => {
 
     try {
         const user  = req.header('user')
-        console.log(user);
         result = await vDAO.getVendasPerUser(user)
-        
         res.json(result)
 
     } catch (err) {
@@ -71,5 +69,16 @@ router.get('/get-vendas-user', authorization, async (req, res) => {
 
 });
 
+router.post('/remove-venda-client', authorization, async (req, res) => {
+    const { prod } = req.query
+    try {
+        console.log(prod);
+       
+
+    } catch (err) {
+        console.error(err.message);
+    }
+
+});
 
 module.exports = router

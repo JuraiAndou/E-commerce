@@ -66,14 +66,13 @@ class VendaDAO{
     }
     
     async getVendasPerUser(id_user){
-        let queryString = `Select venda.id, users.user_name ,venda.data from users inner join venda on venda.id_user = users.user_id where users.user_id = $1;`
+        let queryString = `Select venda.id, users.user_name ,venda.data,venda.preco_final from users inner join venda on venda.id_user = users.user_id where users.user_id = $1;`
         let values = [id_user]
         let results
 
         try {
             results = await db.query(queryString, values);
             return results.rows;
-            
         } catch (err) {
             console.error(err.stack)
         }
