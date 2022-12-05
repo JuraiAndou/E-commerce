@@ -300,7 +300,7 @@ const DashbordAdmin = (props) => {
                 {
                     cliente.length > 0 &&
                     cliente.map((client) => (
-                        <option key={client.user_id} value={cliente.user_id}>{client.user_email}</option>
+                        <option key={client.user_id} value={client.user_id}>{client.user_email}</option>
                     ))
                 }
             </select>
