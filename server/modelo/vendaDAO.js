@@ -3,9 +3,9 @@ const db = require("../dbConfig");
 const { log } = require("console");
 
 class VendaDAO{
-    async inserir(data, id_usuario, preco_total) {
-        let queryString = `INSERT INTO venda(data, id_user, preco_total) VALUES ($1, $2, $3) RETURNING * `;
-        let values = [data, id_usuario, preco_total];
+    async inserir(data, id_usuario, preco_final) {
+        let queryString = `INSERT INTO venda(data, id_user, preco_final) VALUES ($1, $2, $3) RETURNING * `;
+        let values = [data, id_usuario, preco_final];
         try {
             const res = await db.query(queryString, values)
             //console.log(res)
