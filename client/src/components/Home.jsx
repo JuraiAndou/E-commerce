@@ -122,21 +122,27 @@ const Home = (props) => {
 
 
 
-    const finishCart = async() => {
+    const finishCart = async(e) => {
+        e.preventDefault()
         try {
             const body = cart
-
+            console.log("Começando finishCart");
             const response = await fetch('http://localhost:5000/sales/post-sale',
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', token: localStorage.token},
                 body: JSON.stringify(body)
             })
+
+            const parseRes = await response.json();
             
+            console.log("ALOW");
             setCart([]);
             localStorage.removeItem("carrinho")
+            
+            //window.location.reload()
+            setTimeout(window.location.reload())
 
-            window.location.reload(false)
         } catch (err) {
             console.error(err.message);
         }
@@ -180,7 +186,7 @@ const Home = (props) => {
                 }
                 {
                     cart.length > 0 ? (
-                        <button onClick={()=>{finishCart()}} className="btn btn-success">Comprar</button>
+                        <button onClick={(e)=>{finishCart(e)}} className="btn btn-success">Comprar</button>
                     ) : (
                         <Fragment></Fragment>
                     )

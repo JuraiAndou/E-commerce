@@ -10,12 +10,13 @@ class Venda_ProdutoDAO{
 
         try {
             const res = await db.query(queryString, values)
-            console.log(res)
+            //console.log(res)
+            console.log("Dados inseridos");
             return res.rows
         } catch (err) {
-            console.log(err.stack)
+            console.error(err.message)
         }
-        console.log("Dados inseridos");
+        
     }
 
     async deletar(id1, id2){
@@ -23,7 +24,7 @@ class Venda_ProdutoDAO{
         let queryString = `DELETE FROM venda_produto WHERE id_venda = $1 AND id_produto = $2 RETURNING *`;
         try {
             const res = await db.query(queryString, [id1, id2])
-            console.log(res.rows)
+            //console.log(res.rows)
             return res
         } catch (err) {
             console.log(err.stack)
