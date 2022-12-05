@@ -362,7 +362,22 @@ const DashbordAdmin = (props) => {
             <Fragment>
                 <div className="btnDiv">
                     <button id="downloadBtn" value="download" onClick={() => {
-                        const text = ['line 1\n', 'line 2\n', 'line 3\n']
+                        let text = []
+                        text.push(`\t-----[Compras Feitas por Cliente]-----\n`)
+                        for (let i = 0; i < Relatorio.length; i++) {
+                            const rel = Relatorio[i];
+                            text.push(`|id:`,rel[0], '|\t')
+                            text.push(`|nome:`,rel[1], '|\t')
+                            text.push(`|quantidade de compras:`,rel[2], '|\n')
+                        }
+
+                        text.push(`\n\n\t-----[Produtos Fora de Estoque]-----\n`)
+                        for (let i = 0; i < RelatorioP.length; i++) {
+                            const rel = RelatorioP[i];
+                            text.push(`|id:`,rel[0], '|\t')
+                            text.push(`|Descrição:`,rel[1], '|\t')
+                            text.push(`|Preço:R$`,rel[2], '|\n')
+                        }
 
                         const file = new Blob(text, { type: 'text/plain' })
 
