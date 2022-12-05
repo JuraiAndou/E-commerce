@@ -91,26 +91,26 @@ class UsuarioDAO{
         return false;
     }
 
-    async obterComprasPerUser(){
+    async obterComprasPerUser(initial_date, final_date){
         let users = await this.obterTodos()
         let vendasPerUser = []
         let comprasPerCliente = 0
         
-        for (let i = 0; i < users.length; i++){
+        let i = 0;
+        while (i < users.length){
             const compra = await vendas.getVendasPerUser(users[i].user_id)
-            
+
             for (let j = 0; j < compra.length; j++){
-                
-                if (compra[j].data >= new Date('2022-11-03T03:00:00.000Z')){
+                if ((compra[j].data >= initial_date) && (compra[j].data <= final_date)){
                     comprasPerCliente += 1
                 }
             }
-           
+
             var result = [users[i].user_id, users[i].user_name, comprasPerCliente]
             vendasPerUser.push(result)
-
             comprasPerCliente = 0 
-        } 
+            i++
+        }
         return vendasPerUser
     }
 }

@@ -1,5 +1,6 @@
 
 const db = require("../dbConfig");
+const { log } = require("console");
 
 class VendaDAO{
     async inserir(data, id_usuario) {
@@ -72,6 +73,8 @@ class VendaDAO{
         try {
             results = await db.query(queryString, values);
             return results.rows;
+            
+
         } catch (err) {
             console.error(err.stack)
         }
@@ -126,25 +129,14 @@ class VendaDAO{
     }
 
     //estabelece um periodo da mostragem de ganho totais por dia
-    async filterPricePerDate(initial_date, final_date){
+    async filterPricePerDate(date){
         let vendasPerDay = await this.getFullPricePerDate()
 
-        let i = 0;
-        let flag = false
-        while (i < vendasPerDay.length){
-            /**
-             * This loops removes any item with a date smaller than the initial date
-             */
-            if ((vendasPerDay[i][0] <= initial_date) || (vendasPerDay[i][0] >= final_date)){
+        for (let i = 0; i < vendasPerDay.length; i++){
+            if (vendasPerDay[i][0] < new Date('2022-09-11T03:00:00.000Z')){
                 vendasPerDay.splice(i, 1)
-                flag = true//resets the loop case the item i splitted
             }
-            if(flag){//condition to reset loop
-                i = 0
-                flag = false
-            } else{
-                i++;
-            }
+
         }
         vendasPerDay.sort((a, b) => a[0] - b[0]);
 

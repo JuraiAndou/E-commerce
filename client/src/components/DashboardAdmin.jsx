@@ -201,7 +201,10 @@ const DashbordAdmin = (props) => {
 
     async function getRelatorio() {
         try {
-            const result = await fetch("http://localhost:5000/sales/get-allUser-sales", {
+            const result = await fetch("http://localhost:5000/sales/get-allUser-sales?" + new URLSearchParams({
+                date_int: '2022-09-10',
+                date_fnl: '2022-12-03'
+            }), {
                 method: 'GET',
                 headers: { token: localStorage.token }
             })
@@ -339,7 +342,7 @@ const DashbordAdmin = (props) => {
             <br />
             <br />
 
-            <h3><strong>Relatorio de vendas pra o cliente:</strong></h3>
+            <h3><strong>Compras feitas por cliente:</strong></h3>
             Cliente: <select id="clientSelect" name="cliente" onChange={e => { onClienteChange(e) }} className="form-select" aria-label="Default select example">
             <option value="---" disabled selected hidden >Selecione um cliente</option>                {
                     cliente.length > 0 &&
