@@ -251,6 +251,30 @@ const DashbordAdmin = (props) => {
         border: '1px solid black'
     }
 
+    //---------------Relatorio Vendas por Dias----------------
+
+    const [RelatorioVendas, setRelatorioVendas] = useState([])
+
+    async function getRelatorioVendas() {
+        try {
+            const result = await fetch("http://localhost:5000/sales/get-vendas-per-day?" + new URLSearchParams({
+                date_int: '2022-02-01',
+                date_fnl: '2022-12-03'
+            }), {
+                method: 'GET',
+                headers: { token: localStorage.token }
+            })
+            
+            const parseRes = await result.json()
+            console.log('test');
+            console.log(parseRes);
+        } catch (err) {
+            toast.error('Fail to generate sales report')
+            console.error(err.stack)
+        }
+    }
+
+
     // Atualizar a cada renderização -----------------
     useEffect(() => {// Called everytime the component is rendered
         getName();
@@ -259,6 +283,7 @@ const DashbordAdmin = (props) => {
         getRelatorioProdutos();
         getCliente()
         getClienteCompras()
+        getRelatorioVendas()
     }, [])
     // -----------------------------------------------
 
