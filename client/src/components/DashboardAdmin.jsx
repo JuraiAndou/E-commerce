@@ -124,7 +124,7 @@ const DashbordAdmin = (props) => {
 
         setPoductData({ ...productData, categoria: elem.value });
     }
-  
+
     //------------Relatorio de cada cliente-------------
     const [cliente, setCliente] = useState([])
 
@@ -145,7 +145,7 @@ const DashbordAdmin = (props) => {
         }
     }
 
-    const [clienteCompras,setClienteCompras] = useState([])
+    const [clienteCompras, setClienteCompras] = useState([])
 
     async function getClienteCompras() {
         const user = 0
@@ -153,26 +153,26 @@ const DashbordAdmin = (props) => {
             const response = await fetch("http://localhost:5000/sales/get-vendas-user", {
                 method: 'GET',
                 headers: { token: localStorage.token, user: user }
-              
+
             })
 
             const parseRes = await response.json()
             setClienteCompras(parseRes)
             console.log(parseRes);
-           
+
         } catch (err) {
             console.error(err.message);
         }
     }
 
-    function onClienteChange(e){
+    function onClienteChange(e) {
         const elem = document.getElementById("clientSelect");
         let valor = elem.value
         console.log(valor);
     }
 
-    function showClientSales (){       
-    
+    function showClientSales() {
+
     }
 
     //---------------Relatorio----------------
@@ -295,7 +295,7 @@ const DashbordAdmin = (props) => {
             <br />
             <br />
 
-            Relatorio de Compra do cliente: <br/>
+            Relatorio de Compra do cliente: <br />
             Cliente:  <select id="clientSelect" name="cliente" onChange={e => { onClienteChange(e) }}>
                 {
                     cliente.length > 0 &&
@@ -317,15 +317,14 @@ const DashbordAdmin = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                       
+
                     </tbody>
                 </table>
             </Fragment>
-            
-            <br />
-            <br />
 
-            { /* <h2 > <strong>Relatório</strong></h2> 
+            <br />
+            <br />
+            <h2 > <strong>Relatório</strong></h2>
             <Fragment>
                 <h5>Compras feitas por cliente</h5>
                 <table width="400" cellPadding="5"
@@ -359,8 +358,24 @@ const DashbordAdmin = (props) => {
                     </tbody>
                 </table>
             </Fragment>
-                */}
-                
+            <br />
+            <Fragment>
+                <div className="btnDiv">
+                    <button id="downloadBtn" value="download" onClick={() => {
+                        const text = ['line 1\n', 'line 2\n', 'line 3\n']
+
+                        const file = new Blob(text, { type: 'text/plain' })
+
+                        const element = document.createElement("a")
+                        element.href = URL.createObjectURL(file)
+                        element.download = "Relatório" + Date.now() + ".txt"
+
+                        document.body.appendChild(element)
+                        element.click()
+                    }} className="btn btn-secondary">Download</button>
+                </div>
+            </Fragment>
+            <br />
             <Link to="/edit" className="btn">Edit Profile</Link>
             <button
                 className="btn btn-primary"
