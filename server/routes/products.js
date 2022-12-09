@@ -156,17 +156,7 @@ router.get('/obter-products-out', authorization, priviledge, async (req, res) =>
 router.get('/get-product-image', async (req, res) => {
     const id = req.query.id;
     let imagePath = "nada"
-    try {
-        imagePath = `${id}.png`
-    } catch (err) {
-        console.error("aoba")
-        //console.error(err.message);
-
-    }
-    console.log(id);
-    if (id == 6) {
-        console.log(imagePath);
-    }
+    imagePath = `${id}.png`
     
     try {
         let options = {
