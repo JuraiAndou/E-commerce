@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import moment from 'moment'
-import reactMoment from 'react-moment'
 
 
 
@@ -200,12 +199,15 @@ const DashbordAdmin = (props) => {
 
     //---------------Relatorio----------------
     const [Relatorio, setRelatorio] = useState([])
+    const [CPCInitialDate, setCPCInitialDate] = useState([])
+    const [CPCFinalDate, setCPCFinalDate] = useState([])
 
     async function getRelatorio() {
+        console.log('data init:', VInintialDate, '\ndate final:', VFinalDate)
         try {
             const result = await fetch("http://localhost:5000/sales/get-allUser-sales?" + new URLSearchParams({
-                date_int: '2022-09-10',
-                date_fnl: '2022-12-06'
+                date_int: CPCInitialDate,
+                date_fnl: CPCFinalDate
             }), {
                 method: 'GET',
                 headers: { token: localStorage.token }
@@ -233,6 +235,26 @@ const DashbordAdmin = (props) => {
         })
 
     }
+
+    function onChageCPCInitialDate(e) {
+        let someDate = new Date(e.target.value)
+        someDate.setDate(someDate.getDate() + 1)
+        const newDate = moment(someDate).format('YYYY-MM-DD')
+        setCPCInitialDate(newDate)
+
+        getRelatorioVendas()
+    }
+
+    function onChageCPCFinalDate(e) {
+        let someDate = new Date(e.target.value)
+        someDate.setDate(someDate.getDate() + 1)
+        const newDate = moment(someDate).format('YYYY-MM-DD')
+        console.log(e.target.value);
+        setCPCFinalDate(newDate)
+
+        getRelatorioVendas()
+    }
+
     //---------------Relatorio Produto----------------
     const [RelatorioP, setRelatorioP] = useState([])
 
@@ -343,9 +365,13 @@ const DashbordAdmin = (props) => {
     }, [])
     // -----------------------------------------------
 
-    useEffect(()=>{
+    useEffect(() => {
         getRelatorioVendas();
     }, [VInintialDate, VFinalDate])
+
+    useEffect(() => {
+        getRelatorio();
+    }, [CPCInitialDate, CPCFinalDate])
 
     //<br/><input type="text" name="categoria" placeholder="Categoria" value={productData.categoria} onChange={e=>{onChangeProduct(e)}}/><br/>
     return (
@@ -360,7 +386,7 @@ const DashbordAdmin = (props) => {
                 Quantidade: <br /><input type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} /><br />
                 Categoria: <br /><select id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
                     <option value="---" disabled selected hidden>Selecione a categoria</option>
-                    
+
                     {
                         categoria.length > 0 &&
                         categoria.map((catego) => (
@@ -413,6 +439,9 @@ const DashbordAdmin = (props) => {
             <h2 > <strong>Relatório</strong></h2>
             <Fragment>
                 <h5>Total de Compras por cliente</h5>
+                <h5>Vendas por dia</h5>
+                data inicial: <input id="data-init" type='date' value={CPCInitialDate} onChange={e => { onChageCPCInitialDate(e) }} />
+                data final: <input id="data-final" type="date" value={CPCFinalDate} onChange={e => { onChageCPCFinalDate(e) }} />
                 <table width="400" cellPadding="5"
                     style={table_style}>
                     <thead>
@@ -447,8 +476,8 @@ const DashbordAdmin = (props) => {
             <br />
             <Fragment>
                 <h5>Vendas por dia</h5>
-                    data inicial: <input id="data-init" type='date' value={VInintialDate} onChange={e => {onChageVInitialDate(e)}}/>
-                    data final: <input id="data-final" type="date" value={VFinalDate} onChange={e => {onChageVFinalDate(e)}}/>
+                data inicial: <input id="data-init" type='date' value={VInintialDate} onChange={e => { onChageVInitialDate(e) }} />
+                data final: <input id="data-final" type="date" value={VFinalDate} onChange={e => { onChageVFinalDate(e) }} />
                 <table width="400" cellPadding="5"
                     style={table_style}>
                     <thead>

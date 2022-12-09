@@ -53,8 +53,6 @@ class ProdutoDAO{
         let results;
         try {
             results = await db.query(queryString, [id]);
-
-            console.log("Dados obtidos: ", results.rows);
             return results.rows[0];
         } catch (err) {
             console.error(err.message);
@@ -83,12 +81,8 @@ class ProdutoDAO{
         let results;
         try {
             const currentProd = await this.obter(id)
-            console.log("Dentro DAO: ");
-            console.log(currentProd);
-            console.log(currentProd.quantidade, qntd);
 
             results = await db.query(queryString, [id, currentProd.quantidade - qntd]);
-            console.log("Dados atualizados");
             return results;
         } catch (err) {
             console.error(err.message);

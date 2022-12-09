@@ -95,7 +95,6 @@ class UsuarioDAO{
         let users = await this.obterTodos()
         let vendasPerUser = []
         let comprasPerCliente = 0
-        
         let i = 0;
         while (i < users.length){
             const compra = await vendas.getVendasPerUser(users[i].user_id)

@@ -62,41 +62,43 @@ router.post('/post-sale', authorization, async(req, res) => {
 
         let precoTotal = 0;
 
-        for(let i=0; i<products.length; i++){
-            //console.log("AOBA " + i);
-            //console.log(products[i].id, products[i].quantidade);
-            pDAO.atualizarQuantidade(products[i].id, products[i].quantidade);
-            precoTotal += products[i].quantidade * products[i].preco
+        let invalid = false
+
+        for (let j = 0; j < products.length; j++) {
+            const pID = products[j].id;
+            let prod = await pDAO.obter(pID)
+            if (prod.quantidade <= 0){
+                invalid = true
+            }
         }
-        //let result = await pDAO.obterTodos();
-        
-        /**
-         * Criar nova venda
-         */
-        //console.log("Olha a dataaaaaaaaa");
-        //console.log(new Date(Date.now()));
-        const resVendas = await vDAO.inserir(new Date(Date.now()), req.user.id, precoTotal)
-        //console.log("OLHA A VENDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        //console.log(resVendas);
 
-        const parseVendas = resVendas.rows[0]
-
-        //console.log(parseVendas);
-
-        /**
-         * Conectar as tabelas
-         */
-        
-        for(let i=0; i<products.length; i++){
-            //console.log("AOBA " + i);
-            //console.log(products[i].id, products[i].quantidade);
-            vpDAO.inserir(parseVendas.id, products[i].id , products[i].quantidade);
+        if (!invalid) {
+            for(let i=0; i<products.length; i++){
+                pDAO.atualizarQuantidade(products[i].id, products[i].quantidade);
+                precoTotal += products[i].quantidade * products[i].preco
+            }
+            //let result = await pDAO.obterTodos();
+            
+            /**
+             * Criar nova venda
+             */
+            const resVendas = await vDAO.inserir(new Date(Date.now()), req.user.id, precoTotal)
+            const parseVendas = resVendas.rows[0]
+    
+            /**
+             * Conectar as tabelas
+             */
+            
+            for(let i=0; i<products.length; i++){
+                vpDAO.inserir(parseVendas.id, products[i].id , products[i].quantidade);
+            }
+            //*/
+    
+    
+            res.json(parseVendas); 
+        } else {
+            res.json('')
         }
-        //*/
-
-
-        res.json(parseVendas);
-
     } catch (err) {
         console.error(err.message);
     }
@@ -106,8 +108,8 @@ router.post('/post-sale', authorization, async(req, res) => {
 router.get('/get-allUser-sales', authorization, priviledge, async (req, res) => {
     
     try {
-        const initialDate = (req.query.date_int != undefined) ? new Date(req.query.date_int) : new Date(0)
-        const final_date = (req.query.date_fnl != undefined) ? new Date(req.query.date_fnl) : Date.now()
+        const initialDate = (req.query.date_int != '') ? new Date(req.query.date_int) : new Date(0)
+        const final_date = (req.query.date_fnl != '') ? new Date(req.query.date_fnl) : new Date(Date.now())
         result = await cDAO.obterComprasPerUser(initialDate, final_date)
         res.json(result)
     } catch (err) {
@@ -150,8 +152,8 @@ router.post('/remove-venda-client', authorization, async (req, res) => {
 
 router.get('/get-vendas-per-day', authorization, priviledge, async (req, res) => {
     try {
-        const initialDate = (req.query.date_int != undefined) ? new Date(req.query.date_int) : new Date(0)
-        const final_date = (req.query.date_fnl != undefined) ? new Date(req.query.date_fnl) : Date.now()
+        const initialDate = (req.query.date_int != '') ? new Date(req.query.date_int) : new Date(0)
+        const final_date = (req.query.date_fnl != '') ? new Date(req.query.date_fnl) : new Date(Date.now())
         result = await vDAO.filterPricePerDate(initialDate, final_date)
 
         res.json(result)

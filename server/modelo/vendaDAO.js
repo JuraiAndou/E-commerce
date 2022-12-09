@@ -140,7 +140,7 @@ class VendaDAO{
             /**
              * This loops removes any item with a date smaller than the initial date
              */
-            if ((vendasPerDay[i][0] <= initial_date) || (vendasPerDay[i][0] >= final_date)){
+            if ((vendasPerDay[i][0] <= initial_date) && (vendasPerDay[i][0] >= final_date)){
                 vendasPerDay.splice(i, 1)
                 flag = true//resets the loop case the item i splitted
             }
