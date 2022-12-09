@@ -403,7 +403,6 @@ const DashbordAdmin = (props) => {
             <br />
             <p>Hello <strong>{name.split(' ')[0]}</strong></p>
 
-<<<<<<< Updated upstream
             <h3> <strong>Adicionar novo produto: </strong></h3>
             <form onSubmit={onSubmitProduct} className="mb-3">
                 Descrição:<input className="form-control"  type="text" name="descricao" placeholder="Descrição" value={productData.descricao} onChange={e => { onChangeProduct(e) }} />
@@ -412,15 +411,6 @@ const DashbordAdmin = (props) => {
                 Categoria: <select  className="form-select" aria-label="Default select example" id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
                     <option value="---" disabled selected hidden>Selecione a categoria</option>
 
-=======
-            Adicionar novo produto:
-            <form onSubmit={onSubmitProduct}>
-                Descrição: <br /><input type="text" name="descricao" placeholder="Descrição" value={productData.descricao} onChange={e => { onChangeProduct(e) }} /><br />
-                Preço: <br /><input type="text" name="preco" placeholder="Preço" value={productData.preco} onChange={e => { onChangeProduct(e) }} /><br />
-                Quantidade: <br /><input type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} /><br />
-                Categoria: <br /><select id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
-                    <option value="---" disabled selected hidden >Selecione a categoria</option>
->>>>>>> Stashed changes
                     {
                         categoria.length > 0 &&
                         categoria.map((catego) => (
