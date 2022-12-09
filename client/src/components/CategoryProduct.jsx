@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { toast } from 'react-toastify';
-import CategoryProductComponent from "./components/Layout/CategoryProductComponent";
+import CategoryProductComponent from "./Layout/CategoryProductComponent";
 
 const CategoryProduct = () => {
 

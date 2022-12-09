@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import './App.css';
 import React from 'react';
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import NavBar from './components/Layout/NaveBar';
 
 
@@ -23,7 +23,7 @@ import EditProfile from './components/EditProfile';
 import Home from './components/Home';
 import Categoria from './components/Categoria'
 import UserSales from './components/UserSales';
-import CategoryProduct from './CategoryProduct';
+import CategoryProduct from './components/CategoryProduct';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -47,7 +47,12 @@ function App() {
 
       const parseRes = await response.json()
 
-      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false)
+      if (parseRes === true) {
+        setIsAuthenticated(true)
+      } else {
+        setIsAuthenticated(false)
+        localStorage.removeItem('carrinho')
+      }
     } catch (err) {
       console.error(err.message);
     }
@@ -56,44 +61,44 @@ function App() {
   /**
    * Administrator verification
    */
-   const [isAdministrator, setIsAdmin] = useState(false)
+  const [isAdministrator, setIsAdmin] = useState(false)
 
-   const setAdmin = boolean => {
-     /**
-      * So you can keep track of authentication
-      */
-     setIsAdmin(boolean)
-   }
- 
-   async function isAdmin() {
-     /**
-      * Checks for authentication from the JWT
-      */
-     try {
-       const response = await fetch('http://localhost:5000/auth/is-admin', {
-         method: 'GET',
-         headers: { token: localStorage.token }
-       })
- 
-       const parseRes = await response.json()
- 
-       parseRes === true ? setIsAdmin(true) : setIsAdmin(false)
-     } catch (err) {
-       console.error(err.message);
-     }
-   }
- 
-   //Called evrery time is rendered
-   useEffect(() => {
-     isAuth()// So you can check for authentication on refresh
-     isAdmin()// So you can check for priviledge on refresh
-   })
+  const setAdmin = boolean => {
+    /**
+     * So you can keep track of authentication
+     */
+    setIsAdmin(boolean)
+  }
+
+  async function isAdmin() {
+    /**
+     * Checks for authentication from the JWT
+     */
+    try {
+      const response = await fetch('http://localhost:5000/auth/is-admin', {
+        method: 'GET',
+        headers: { token: localStorage.token }
+      })
+
+      const parseRes = await response.json()
+
+      parseRes === true ? setIsAdmin(true) : setIsAdmin(false)
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  //Called evrery time is rendered
+  useEffect(() => {
+    isAuth()// So you can check for authentication on refresh
+    isAdmin()// So you can check for priviledge on refresh
+  })
 
   return (
     <Fragment>
       <Router>
         <div className='container'>
-          <NavBar isAuthenticated={isAuthenticated} isAdministrator={isAdministrator}/>
+          <NavBar isAuthenticated={isAuthenticated} isAdministrator={isAdministrator} />
           <Routes>
             <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={!isAuthenticated ? (
@@ -113,10 +118,10 @@ function App() {
                 <DashbordAdmin setAuth={setAuth} />
               )
             ) : (
-              <Navigate to='/login' element={Home}/>
+              <Navigate to='/login' element={Home} />
             )} />
             <Route path='/edit' element={isAuthenticated ? (
-              <EditProfile setAuth={setAuth}/>
+              <EditProfile setAuth={setAuth} />
             ) : (
               <Navigate to='/login' />
             )}/>
@@ -129,21 +134,21 @@ function App() {
               )
             ) : (
               <Navigate to='/login' />
-              
-            )}/>
 
-            <Route path='/sales' element={ isAuthenticated ? (
-              <UserSales/>
-            ) : (
-              <Navigate to ='/login'/>
-            )}/>
-            
+            )} />
 
-            <Route path='/categoryProduct' element={ isAuthenticated? (
-              <CategoryProduct/>
+            <Route path='/sales' element={isAuthenticated ? (
+              <UserSales />
             ) : (
-              <Navigate to ='/login'/>
-            )}/>
+              <Navigate to='/login' />
+            )} />
+
+
+            <Route path='/categoryProduct' element={isAuthenticated ? (
+              <CategoryProduct />
+            ) : (
+              <Navigate to='/login' />
+            )} />
 
           </Routes>
         </div>
