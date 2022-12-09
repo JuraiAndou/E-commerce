@@ -166,34 +166,44 @@ const Home = (props) => {
 
             <hr />
             <h1 className="text-center my-5">Carrinho</h1>
-            <div>
-                {console.log("Pegando o pessoal do Cart")}
-                {console.log(cart)}
-                {
-                    cart.length > 0 &&
-                    cart.map((prod) => (
-                        <Fragment key={prod.id}>
-                            <p>
-                                <span>{prod.id} | </span>
-                                <span>{prod.descricao} | </span>
-                                <span>R$ {prod.preco} | </span>
-                                <span>{prod.quantidade} itens | </span>
-                                <button onClick={(e) => { removeCart(e, prod) }} className="btn btn-danger">Remover</button>
-                                <br />
-                            </p>
-                        </Fragment>
-                    ))
-                }
-                {
-                    cart.length > 0 ? (
-                        <button onClick={(e) => { finishCart(e) }} className="btn btn-success">Comprar</button>
-                    ) : (
-                        <Fragment></Fragment>
-                    )
-                }
-
-            </div>
-
+            <table width="600" cellPadding="5"
+                    className="table  table-striped-columns">
+                <thead>
+                    <tr>
+                    <tr >
+                            <th>ID PRODUTO</th>
+                            <th>PRODUTO</th>
+                            <th>PREÇO</th>
+                            <th>QUANTIDADE</th>
+                    </tr>
+                    {console.log("Pegando o pessoal do Cart")}
+                    {console.log(cart)}
+                    {
+                        cart.length > 0 &&
+                        cart.map((prod) => (
+                            <Fragment key={prod.id}>
+                                <tr>
+                                    <td>{prod.id}  </td>
+                                    <td>{prod.descricao} </td>
+                                    <td>R$ {prod.preco}  </td>
+                                    <td>{prod.quantidade} itens  </td>
+                                    <button onClick={(e) => { removeCart(e, prod) }} className="btn btn-danger">-</button>
+                                    <br />
+                                </tr>
+                            </Fragment>
+                        ))
+                    }
+                            </tr>
+                        </thead>
+                    </table>
+                    {
+                        cart.length > 0 ? (
+                            <button onClick={(e) => { finishCart(e) }} className="btn btn-success">Comprar</button>
+                        ) : (
+                            <Fragment></Fragment>
+                        )
+                    }
+                   
 
         </Fragment>
     )

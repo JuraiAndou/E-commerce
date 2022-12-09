@@ -30,7 +30,7 @@ function NavBar(props){
 
             {
             props.isAuthenticated ? (!props.isAdministrator ? (
-                <Link style={linkStyle} to='/sales'> COMPRAS </Link>
+                <Link style={linkStyle} to='/sales'> HISTORICO </Link>
             ):(
                 <span></span>
             )):(

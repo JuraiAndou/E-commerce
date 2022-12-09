@@ -403,12 +403,12 @@ const DashbordAdmin = (props) => {
             <br />
             <p>Hello <strong>{name.split(' ')[0]}</strong></p>
 
-            Adicionar novo produto:
-            <form onSubmit={onSubmitProduct}>
-                Descrição: <br /><input type="text" name="descricao" placeholder="Descrição" value={productData.descricao} onChange={e => { onChangeProduct(e) }} /><br />
-                Preço: <br /><input type="text" name="preco" placeholder="Preço" value={productData.preco} onChange={e => { onChangeProduct(e) }} /><br />
-                Quantidade: <br /><input type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} /><br />
-                Categoria: <br /><select id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
+            <h3> <strong>Adicionar novo produto: </strong></h3>
+            <form onSubmit={onSubmitProduct} className="mb-3">
+                Descrição:<input className="form-control"  type="text" name="descricao" placeholder="Descrição" value={productData.descricao} onChange={e => { onChangeProduct(e) }} />
+                Preço: <input className="form-control"  type="text" name="preco" placeholder="Preço" value={productData.preco} onChange={e => { onChangeProduct(e) }} />
+                Quantidade: <input className="form-control" type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} />
+                Categoria: <select  className="form-select" aria-label="Default select example" id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
                     <option value="---" disabled selected hidden>Selecione a categoria</option>
 
                     {
@@ -418,16 +418,16 @@ const DashbordAdmin = (props) => {
                         ))
                     }
                 </select>
-                Foto: <br /><input type="file" name="imagem" placeholder="Imagem" accept=".png, .jpeg, .jpg" onChange={e => { onChangeImage(e) }} /><br />
+    
+                Foto: <br /> <input class="form-control" type="file" name="imagem" placeholder="Imagem" accept=".png, .jpeg, .jpg" onChange={e => { onChangeImage(e) }} /><br />
                 
-                <br />
                 <input type="submit" className="btn btn-primary" />
             </form>
             <br />
 
-            Adicionar nova categoria:
+            <h3><strong>Adicionar nova categoria:</strong></h3>
             <form onSubmit={onSubmitCategory}>
-                <input type="text" name="descricao" placeholder="Descrição" value={categoryData.descricao} onChange={e => { onChangeCategory(e) }} /><br />
+                <input  className="form-control" type="text" name="descricao" placeholder="Descrição" value={categoryData.descricao} onChange={e => { onChangeCategory(e) }} /><br />
                 <input type="submit" className="btn btn-primary" />
             </form>
             <br />
@@ -445,7 +445,7 @@ const DashbordAdmin = (props) => {
             <br />
             <Fragment>
                 <table width="400" cellPadding="5"
-                    style={table_style} className="table table-dark table-striped-columns">
+                    style={table_style} className="table table-dark table-striped-columns  rounded">
                     <thead>
                         <tr style={table_style}>
                             <th style={table_style}>ID DA VENDA</th>
