@@ -157,7 +157,7 @@ const Home = (props) => {
             {products.length > 0 &&
                 products.map((product) =>(
                     <Fragment key={product.id}>
-                        <ProductComponent add={addCart} id={product.id} nome={product.descricao} preco={product.preco} quantidade={product.quantidade} categoria={product.categoria_descricao} categorias={categoria} id_categoria={product.id_categoria} key={product.id} isAdministrator={props.isAdministrator}/>       
+                        <ProductComponent add={addCart} id={product.id} nome={product.descricao} preco={product.preco} quantidade={product.quantidade} categoria={product.categoria_descricao} categorias={categoria} id_categoria={product.id_categoria} key={product.id} isAdministrator={props.isAdministrator} isAuthenticated={props.isAuthenticated}/>       
                         {/*<button onClick={(e) => {addCart(e, product)}} className="btn btn-primary">Adicionar</button>*/}
                     </Fragment>
                 ))

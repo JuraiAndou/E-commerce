@@ -22,8 +22,9 @@ router.get('/get-sales', authorization, priviledge, async (req, res) => {
         res.json(sales.rows);
 
     } catch (err) {
-        console.log(queryString);
+        //console.log(queryString);
         console.error(err.message);
+        res.status(500).json('Server Error')
     }
 });
 
@@ -45,6 +46,7 @@ router.get('/get-specific-sales', authorization, async (req, res) => {
 
     } catch (err) {
         console.error(err.message);
+        res.status(500).json('Server Error')
     }
 
 });
@@ -99,6 +101,7 @@ router.post('/post-sale', authorization, async(req, res) => {
 
     } catch (err) {
         console.error(err.message);
+        res.status(500).json('Server Error')
     }
 })
 
@@ -126,6 +129,7 @@ router.get('/get-vendas-user', authorization, priviledge, async (req, res) => {
 
     } catch (err) {
         console.error(err.message);
+        res.status(500).json('Server Error')
     }
 
 });
@@ -157,6 +161,7 @@ router.get('/get-vendas-per-day', authorization, priviledge, async (req, res) =>
         res.json(result)
     } catch (err) {
         console.error(err);
+        res.status(500).json('Server Error')
     }
 })
 

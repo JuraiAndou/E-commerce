@@ -48,7 +48,7 @@ router.get('/get-categories', authorization, priviledge, async (req, res) => {
     }
 })
 
-router.post('/get-category', authorization, async (req, res) => {
+router.post('/get-category', async (req, res) => {
     try {
         /**
          * @TODO Change this to a user DAO
@@ -73,7 +73,7 @@ router.post('/get-category', authorization, async (req, res) => {
     }
 })
 
-router.post('/get-category-products', authorization, async (req, res) => {
+router.post('/get-category-products', async (req, res) => {
     // Pega a categoria de um produto a partir do seu id
     try {
         const {id_produto} = req.query;
@@ -89,7 +89,8 @@ router.post('/get-category-products', authorization, async (req, res) => {
     }
 })
 
-router.post('/get-products-category', authorization, async (req, res) => {
+router.post('/get-products-category', async (req, res) => {
+    // Pega os produtos de uma categoria a partir de seu id
     try {
         //console.log("abublé");
         const {id_categoria} = req.query;

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import moment from 'moment'
 import reactMoment from 'react-moment'
-
+import axios from 'axios'
 
 
 const DashbordAdmin = (props) => {
@@ -37,19 +37,34 @@ const DashbordAdmin = (props) => {
         descricao: "",
         preco: 0,
         quantidade: 0,
-        categoria: ""
+        categoria: "",
     });
 
     const onChangeProduct = (e) => {
         setPoductData({ ...productData, [e.target.name]: e.target.value })
     }
 
+    const [imagem, setImagem] = useState();
+    
+    const onChangeImage = (e) => {
+        setImagem(e.target.files[0]);
+    }
+
     const onSubmitProduct = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+
+        for (var key in productData){
+            formData.append(key, productData[key]);
+        }
+
+        formData.append('imagem', imagem)
+
         try {//console.log(productData);
             const body = productData;
             console.log(body);
 
+            /*
             const response = await fetch('http://localhost:5000/product/add-product', {
                 method: 'POST',
                 headers: {
@@ -58,10 +73,19 @@ const DashbordAdmin = (props) => {
                 },
                 body: JSON.stringify(body)
             })
-            const parseRes = await response.json()
+            //*/
+            const response = await axios.post('http://localhost:5000/product/add-product', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    token: localStorage.token
+                }
+            })
+
+
+            //const parseRes = await response.json()
             toast.success('Product ' + productData.descricao + ' added')
 
-            console.log(parseRes);
+            //console.log(parseRes);
         } catch (err) {
             console.error(err.message);
         }
@@ -359,7 +383,7 @@ const DashbordAdmin = (props) => {
                 Preço: <br /><input type="text" name="preco" placeholder="Preço" value={productData.preco} onChange={e => { onChangeProduct(e) }} /><br />
                 Quantidade: <br /><input type="text" name="quantidade" placeholder="Quantidade" value={productData.quantidade} onChange={e => { onChangeProduct(e) }} /><br />
                 Categoria: <br /><select id="catSelect" onChange={e => { onCatChange(e) }} name="categoria">
-                    <option value="---" disabled selected hidden>Selecione a categoria</option>
+                   <option value="---" disabled selected hidden>Selecione a categoria</option>
                     
                     {
                         categoria.length > 0 &&
@@ -368,6 +392,8 @@ const DashbordAdmin = (props) => {
                         ))
                     }
                 </select>
+                Foto: <br /><input type="file" name="imagem" placeholder="Imagem" accept=".png, .jpeg, .jpg" onChange={e => { onChangeImage(e) }} /><br />
+                
                 <br />
                 <input type="submit" className="btn btn-primary" />
             </form>

@@ -2,24 +2,46 @@ const router = require('express').Router()
 const pool = require('../dbConfig')
 const authorization = require('../middleware/authorization')
 const priviledge = require('../middleware/isAdmin')
+const fileUpload = require('express-fileupload');
 const pcDAO = require('../modelo/produto_categoriaDAO')
 const pDAO= require('../modelo/produtoDAO')
 
+
+
 router.post('/add-product', authorization, priviledge, async (req, res) => {
+    //console.log(req);
     try {
-        const { descricao, preco, quantidade, categoria } = req.body
+        const { descricao, preco, quantidade, categoria} = req.body
         //console.log("bingus");
         //console.log(req.body);
         /**
          * @TODO Change this to a user DAO
          */
+
+        const imagem = req.files.imagem;
+
+
         const newProduct = await pool.query('INSERT INTO public.produto(descricao, preco, quantidade)VALUES ($1, $2, $3) RETURNING *', [
             descricao,
             parseFloat(preco),
-            parseInt(quantidade)
+            parseInt(quantidade),
         ])
 
         const newId = await newProduct.rows[0].id;
+
+        const foto = await pool.query('UPDATE produto SET foto = $1 WHERE id = $2 RETURNING * ',[
+            {imagem: newId},
+            newId
+        ])
+        
+        imagem.mv(`${__dirname}/../images/${newId}.png`, err => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send(err)
+            }
+        })
+
+
         //console.log("bingus");
         //console.log(newId);
         //console.log(categoria);
@@ -34,7 +56,7 @@ router.post('/add-product', authorization, priviledge, async (req, res) => {
     }
 })
 
-router.get('/get-products', authorization, priviledge, async (req, res) => {
+router.get('/get-products',  async (req, res) => {
     try {
         //res.json(req.user)
 
