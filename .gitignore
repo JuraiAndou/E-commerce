@@ -129,4 +129,4 @@ dist
 #vscode workspace
 *.code-workspace
 
-server/images
+.server/images
