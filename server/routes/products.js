@@ -5,6 +5,8 @@ const priviledge = require('../middleware/isAdmin')
 const fileUpload = require('express-fileupload');
 const pcDAO = require('../modelo/produto_categoriaDAO')
 const pDAO= require('../modelo/produtoDAO')
+const path = require('path');
+const { log } = require('console');
 
 
 
@@ -149,6 +151,51 @@ router.get('/obter-products-out', authorization, priviledge, async (req, res) =>
         console.error(err.message);
     }
       
+})
+
+router.get('/get-product-image', async (req, res) => {
+    const id = req.query.id;
+    let imagePath = "nada"
+    try {
+        imagePath = `${__dirname}/../imagens/${id}.png`
+    } catch (err) {
+        console.error("aoba")
+        //console.error(err.message);
+
+    }
+    console.log(id);
+    if (id == 42) {
+        console.log(imagePath);
+    }
+    
+    try {
+        let options = {
+            root: path.join(__dirname)
+        };
+
+        res.sendFile(imagePath, options, (err) => {
+            if(err){
+                //console.error("FALA CAMBADAAAAAAAAAAA");
+                //console.error(err.message);
+            }else{
+                console.log("Enviando arquivo: ");
+                console.log(imagePath);
+            }
+        })
+        //console.log("--------------ALOW-------------------");
+        //*/
+    } catch (err) {
+        //console.error(err.message);
+        res.status(500).send("Sem imagem")
+    }
+    
+    
+
+    
+    
+    //*/
+
+
 })
 
 module.exports = router

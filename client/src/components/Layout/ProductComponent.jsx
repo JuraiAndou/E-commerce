@@ -97,10 +97,52 @@ const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, c
     }, []);
     //*/
 
+
+    // -------------------------RESGATAR IMAGEM DO PRODUTO--------------------------
+    
+    const [image, setImage] = useState(null);
+    const [imagePath, setImagePath] = useState(null);
+    
+    
+    const getImage = async (id) => {
+        try {
+            const res = await fetch("http://localhost:5000/product/get-product-image?id=" + id, {
+                method: 'GET',
+                headers: { token: localStorage.token }
+            })
+
+            if (res.status === 200 ) {
+                const imageBlob = await res.blob()
+                const imageObjectURL = URL.createObjectURL(imageBlob);
+                
+                setImage(imageBlob)
+                setImagePath(imageObjectURL)
+                
+                /*
+                const container = document.getElementById("your-container")
+                container.append(image)
+                //*/
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    useEffect(()=>{
+        getImage(id)
+    }, [])
+    //<img src="https://via.placeholder.com/250" className="card-img-top" alt="Produto"></img>
+            
     return (
 
         <div className="card" style={cardStyle}>
-            <img src="https://via.placeholder.com/250" className="card-img-top" alt="Produto"></img>
+
+            {image !== null ? (
+                <img src={imagePath} className="card-img-top" alt="Produto"></img>
+            ): (
+                <img src="https://via.placeholder.com/250" className="card-img-top" alt="Produto"></img>
+            )}
+
             <div className="card-body">
                 {!isEditing ? (
                     <Fragment>
