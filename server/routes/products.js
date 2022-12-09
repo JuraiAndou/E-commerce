@@ -157,26 +157,26 @@ router.get('/get-product-image', async (req, res) => {
     const id = req.query.id;
     let imagePath = "nada"
     try {
-        imagePath = `${__dirname}/../imagens/${id}.png`
+        imagePath = `${id}.png`
     } catch (err) {
         console.error("aoba")
         //console.error(err.message);
 
     }
     console.log(id);
-    if (id == 42) {
+    if (id == 6) {
         console.log(imagePath);
     }
     
     try {
         let options = {
-            root: path.join(__dirname)
+            root: path.join(`${__dirname}/../images/`)
         };
 
         res.sendFile(imagePath, options, (err) => {
             if(err){
                 //console.error("FALA CAMBADAAAAAAAAAAA");
-                //console.error(err.message);
+                console.error(err.message);
             }else{
                 console.log("Enviando arquivo: ");
                 console.log(imagePath);
