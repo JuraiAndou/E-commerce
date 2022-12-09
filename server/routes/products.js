@@ -129,6 +129,9 @@ router.post('/remove-product', authorization, priviledge, async (req, res) => {
         /**
          * @TODO Change this to a user DAO
          */
+        const remove_pre_child = await pool.query('DELETE FROM public.produto_categoria WHERE id_produto = $1; ', [
+            prod
+        ])
         const remove_child = await pool.query('DELETE FROM public.venda_produto WHERE id_produto = $1; ', [
             prod
         ])
