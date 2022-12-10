@@ -6,7 +6,6 @@ const fileUpload = require('express-fileupload');
 const pcDAO = require('../modelo/produto_categoriaDAO')
 const pDAO= require('../modelo/produtoDAO')
 const path = require('path');
-const { log } = require('console');
 
 
 
@@ -190,5 +189,34 @@ router.get('/get-product-image', async (req, res) => {
 
 
 })
+
+router.post("/update-image-product", authorization, priviledge,  async (req, res) => {
+    const id = req.query.id;
+    const imagem = req.files.imagem;
+    //console.log("Olha a imagem chegando", imagem);
+    try {
+        imagem.mv(`${__dirname}/../images/${id}.png`, err => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send(err)
+            }else{
+                res.status(200).send("Deu bom")
+            }
+        })
+        
+    } catch (err) {
+       console.error(err.message);
+       res.status(500) 
+    }
+    
+})
+/*
+imagem.mv(`${__dirname}/../images/${newId}.png`, err => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send(err)
+            }
+        })
+*/
 
 module.exports = router

@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { toast } from 'react-toastify';
+import axios from 'axios'
 
 const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, categorias, id_categoria, isAdministrator, isAuthenticated}) => {
 
@@ -69,10 +70,18 @@ const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, c
             const categoria_id = prod_categoria_id
             const body = { descricao, preco, quantidade, categoria_id}
             console.log(body)
+
             const response = await fetch("http://localhost:5000/product/update-product?prod=" + id, {
                 method: 'Post',
                 headers: { 'Content-Type': 'application/json', token: localStorage.token },
                 body: JSON.stringify(body)
+            })
+
+            const imageData = new FormData();
+            imageData.append('imagem', newImage)
+            console.log("Olha a imagem", newImage);
+            const res2 = axios.post("http://localhost:5000/product/update-image-product?id=" + id, imageData,{
+                headers: { 'Content-Type': 'multipart/form-data', token: localStorage.token },
             })
 
             const parseRes = await response.json()
@@ -86,8 +95,8 @@ const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, c
 
     function onCatChange(e){
         const elem = document.getElementById("categoriasSelect");
-        console.log("O VALOR DA NOVA CATEGORIA");
-        console.log(elem.value);
+        //console.log("O VALOR DA NOVA CATEGORIA");
+        //console.log(elem.value);
         setInputs({...inputs, prod_categoria_id: elem.value})
     }
     
@@ -132,7 +141,15 @@ const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, c
         getImage(id)
     }, [])
     //<img src="https://via.placeholder.com/250" className="card-img-top" alt="Produto"></img>
-            
+    
+
+
+    const [newImage, setNewImage] = useState()
+
+    const updateImage = async (e) => {
+        setNewImage(e.target.files[0])
+    }
+
     return (
 
         <div className="card" style={cardStyle}>
@@ -189,7 +206,11 @@ const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, c
                             value={prod_quantidade}
                             onChange={e => onChange(e)}
                         />
-                        
+                        <input 
+                            type="file" 
+                            name="imagem" 
+                            className="form-control my-3" 
+                            onChange={e => updateImage(e)}/>
 
                         <div className="d-grid gap-2 my-3">
                             <button className="btn btn-primary btn-success">Submit</button>
@@ -207,6 +228,8 @@ const ProductComponent = ({add, id, nome, preco: price, quantidade, categoria, c
                                 className="btn btn-danger"
                                 onClick={e => remove(e)}
                             >Remove</button>
+                            
+                            
                         </div>
                     </Fragment>
                 ) : (
